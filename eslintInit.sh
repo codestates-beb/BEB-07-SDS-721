@@ -4,8 +4,10 @@ npx install-peerdeps --dev eslint-config-airbnb
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension esbenp.prettier-vscode
 
-
-mkdir .vscode
+if  [ ! -d "./.vscode" ] 
+then
+  mkdir .vscode
+fi
 
 echo '{
   "eslint.validate": [

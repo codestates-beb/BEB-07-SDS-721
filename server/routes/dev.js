@@ -1,4 +1,6 @@
+/* eslint-disable no-restricted-syntax */
 const express = require('express');
+
 const router = express.Router();
 const { users, nfts } = require('../dummyData');
 
@@ -16,31 +18,33 @@ router.get('/nfts', (req, res, next) => {
   return res.status(200).json(data);
 });
 
-router.get('/nfts/:token_id', (req, res, next) => {
-  const token_id = req.params.token_id;
-  const data = nfts.filter((nft) => nft.token_id === token_id);
+router.get('/nfts/:tokenId', (req, res, next) => {
+  const { tokenId } = req.params;
+  const data = nfts.filter((nft) => nft.token_id === tokenId);
   if (data.length === 0) {
     return res
       .status(404)
-      .json({ message: `no matching token_id : ${token_id}` });
+      .json({ message: `no matching token_id : ${tokenId}` });
   }
   return res.status(200).json(data);
 });
 
-router.post('/nfts/:token_id', (req, res, next) => {
-  const token_id = req.params.token_id;
-  const data = nfts.filter((nft) => nft.token_id === token_id)[0];
-  for (let key in req.body) {
-    data[key] = req.body[key];
+router.post('/nfts/:tokenId', (req, res, next) => {
+  const { tokenId } = req.params;
+  const data = nfts.filter((nft) => nft.token_id === tokenId)[0];
+  if (data) {
+    for (const key of Object.keys(req.body)) {
+      data[key] = req.body[key];
+    }
   }
   return res.status(200).json(data);
 });
 
 router.post('/nfts', (req, res, next) => {
-  const { token_id, img_link, name, description, theme } = req.body;
+  const { tokenId, imgLink, name, description, theme } = req.body;
   const nft = {
-    token_id,
-    img_link,
+    token_id: tokenId,
+    img_link: imgLink,
     name,
     description,
     theme,
@@ -54,7 +58,7 @@ router.post('/nfts', (req, res, next) => {
   return res.status(201).json(nft);
 });
 
-//user routers
+// user routers
 router.get('/users/my', (req, res, next) => {
   return res.status(200).json(users[0]);
 });
@@ -82,7 +86,7 @@ router.get('/users/my/nfts', (req, res, next) => {
 });
 
 router.get('/users/:account', (req, res, next) => {
-  const account = req.params.account;
+  const { account } = req.params;
   const data = users.filter((user) => user.account === account);
   if (data.length === 0) {
     return res

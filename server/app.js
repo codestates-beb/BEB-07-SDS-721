@@ -1,14 +1,18 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
+
 dotenv.config();
 const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const connectDB = require('./schemas');
 
-const devRouter = require('./routes/dev.js');
+const devRouter = require('./routes/dev');
 // const nftsRouter = require('./routes/nfts');
-// const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
+
+connectDB();
 
 const app = express();
 app.set('port', process.env.PORT || 5050);
@@ -29,8 +33,8 @@ app.use(
 );
 
 app.use('/dev', devRouter);
+app.use('/users', usersRouter);
 // app.use('/nfts', nftsRouter);
-// app.use('/users', usersRouter);
 
 app.use((req, res, next) => {
   const err = new Error(`${req.method} ${req.url} There is no Router`);

@@ -33,9 +33,9 @@ app.use('/dev', devRouter);
 // app.use('/users', usersRouter);
 
 app.use((req, res, next) => {
-  const error = new Error(`${req.method} ${req.url} There is no Router`);
-  error.status = 404;
-  next(error);
+  const err = new Error(`${req.method} ${req.url} There is no Router`);
+  err.status = 404;
+  next(err);
 });
 
 app.use((err, req, res, next) => {
@@ -48,4 +48,5 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), 'is up and listening');
 });
+
 module.exports = app;

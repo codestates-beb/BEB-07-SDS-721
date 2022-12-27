@@ -5,6 +5,7 @@ import MyPageSample1 from 'img/myPage_sample_1.png';
 import MyPageSample2 from 'img/myPage_sample_2.png';
 
 import sample1 from 'img/card_sample_1.jpg';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 const MyPage = ({ account }) => {
   return (

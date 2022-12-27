@@ -10,6 +10,7 @@ import Explore from 'pages/Explore';
 import Home from 'pages/Home';
 import Mint from 'pages/Mint';
 import MyPage from 'pages/MyPage';
+import Details from 'pages/Details';
 
 function App() {
   const [web3, setWeb3] = useState();
@@ -68,6 +69,8 @@ function App() {
           <Route path="/explore" element={<Explore />}></Route>
           <Route path="/mint" element={<Mint />}></Route>
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
+          <Route path="/details" element={<Details />}></Route>
+
         </Routes>
         <Footer />
       </div>

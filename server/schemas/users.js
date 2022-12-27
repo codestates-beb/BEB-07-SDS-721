@@ -6,13 +6,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   nickname: {
     type: String,
     default: 'anonymous',
   },
-  collected: [{ token_id: String }],
-  created: [{ token_id: String }],
+  collected: [String],
+  created: [String],
 });
 
 module.exports = mongoose.model('User', userSchema);

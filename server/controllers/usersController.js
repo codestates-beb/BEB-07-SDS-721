@@ -1,5 +1,5 @@
-const { query } = require('express');
 const User = require('../schemas/users');
+const Nft = require('../schemas/nfts');
 
 module.exports = {
   login: async (req, res, next) => {
@@ -16,10 +16,10 @@ module.exports = {
     }
   },
   myInfo: async (req, res, next) => {
-    const myInfo = 'a12';
+    const myInfo = 'a1'; // TODO: make variable
     const foundAccount = await User.findOne({ account: myInfo });
     if (!foundAccount) {
-      return res.status(404).json({ message: 'no such user' });
+      return res.status(404).json({ status: 'error', message: 'no such user' });
     }
     console.log(foundAccount);
     return res.json(foundAccount);
@@ -29,7 +29,9 @@ module.exports = {
       const { account } = req.params;
       const queryResult = await User.findOne({ account });
       if (!queryResult) {
-        return res.status(404).json({ message: 'no such user' });
+        return res
+          .status(404)
+          .json({ status: 'error', message: 'no such user' });
       }
       return res.status(200).json(queryResult);
     } catch (err) {
@@ -42,9 +44,12 @@ module.exports = {
       const { account } = req.params;
       const queryResult = await User.findOne({ account });
       if (!queryResult) {
-        return res.status(404).json({ message: 'no such user' });
+        return res
+          .status(404)
+          .json({ status: 'error', message: 'no such user' });
       }
-      return res.status(200).json(queryResult.collected);
+      const nfts = await Nft.find({ tokenId: queryResult.collected });
+      return res.status(200).json(nfts);
     } catch (err) {
       console.error(err);
       return next(err);

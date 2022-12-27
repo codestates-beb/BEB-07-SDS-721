@@ -9,13 +9,13 @@ const cookieParser = require('cookie-parser');
 const connect = require('./schemas');
 
 const devRouter = require('./routes/dev');
-// const nftsRouter = require('./routes/nfts');
+const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
 
 connect();
 
 const app = express();
-app.set('port', process.env.PORT || 5050);
+app.set('port', process.env.PORT || 5051);
 app.set('view engine', 'ejs');
 
 app.use(morgan('dev'));
@@ -37,7 +37,7 @@ app.use(
 
 app.use('/dev', devRouter);
 app.use('/users', usersRouter);
-// app.use('/nfts', nftsRouter);
+app.use('/nfts', nftsRouter);
 
 app.use((req, res, next) => {
   const err = new Error(`${req.method} ${req.url} There is no Router`);

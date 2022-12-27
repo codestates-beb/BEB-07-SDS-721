@@ -1,5 +1,6 @@
 import './Home.css';
 import NftCard from 'components/features/NftCard';
+import { useState, useEffect } from 'react';
 
 import sample1 from 'img/card_sample_1.jpg';
 import sample2 from 'img/card_sample_2.jpg';
@@ -8,6 +9,17 @@ import sample4 from 'img/card_sample_4.jpg';
 import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
+  const [nfts, setNfts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://snowdelver.iptime.org/dev/nfts')
+      .then((res) => res.json())
+      .then((res) => {
+        setNfts([...res]);
+        console.log(res);
+      });
+  }, []);
+
   return (
     <div className="home mb-28">
       <div className="home-inner mx-auto mt-[19px] w-4/5">
@@ -15,7 +27,27 @@ const Home = () => {
           Explore, collect, and sell NFTs
         </p>
         <div className="flex h-[387px] ">
-          <div className="mr-[50px] flex-1">
+          {/* <div className="mr-[50px] flex-1">
+            <NftCard
+              nft_img={nfts[0].img_link}
+              nft_name={nfts[0].name}
+              artist_name={nfts[0].creater}
+              artist_profile={profile_sample}
+              price={nfts[0].price}
+            />
+          </div> */}
+          {nfts.map((nft) => (
+            <div className="mr-[50px] flex-1">
+              <NftCard
+                nft_img={nft.img_link}
+                nft_name={nft.name}
+                artist_name={nft.creater}
+                artist_profile={profile_sample}
+                price={nft.price}
+              />
+            </div>
+          ))}
+          {/* <div className="mr-[50px] flex-1">
             <NftCard
               nft_img={sample1}
               nft_name="NFT Name"
@@ -42,6 +74,7 @@ const Home = () => {
               price="1.63"
             />
           </div>
+           */}
           <div className="flex-1">
             <NftCard
               nft_img={sample4}

@@ -22,7 +22,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="home-inner mx-auto mt-[19px] w-4/5">
+      <div className="home-inner mx-auto mt-[19px] w-10/12">
         <p className="mx-auto mb-8 flex h-[84px] w-[876px] items-center justify-center text-6xl font-semibold">
           Explore, collect, and sell NFTs
         </p>

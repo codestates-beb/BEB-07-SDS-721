@@ -15,6 +15,7 @@ module.exports = {
       'gray-light': '#d3dce6',
       white: '#ffffff',
       'blue-light': '#1f3c88',
+      'blue-footer': '#5893d4',
     },
   },
   plugins: [],

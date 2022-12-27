@@ -2,7 +2,7 @@ const dummyData = {
   nfts: [
     {
       token_id: 't1',
-      img_link: 'https://aws.com/seolNft.png',
+      img_link: 'https://sds-721.s3.ap-northeast-2.amazonaws.com/t1.jpg',
       name: 'seol_nft',
       description: 'seol_nft_desc',
       sale: false,
@@ -14,7 +14,7 @@ const dummyData = {
     },
     {
       token_id: 't2',
-      img_link: 'https://aws.com/kwonNft.png',
+      img_link: 'https://sds-721.s3.ap-northeast-2.amazonaws.com/t2.jpg',
       name: 'kwon',
       description: 'kwon_nft_desc',
       sale: true,
@@ -26,7 +26,7 @@ const dummyData = {
     },
     {
       token_id: 't3',
-      img_link: 'https://aws.com/hongNft.png',
+      img_link: 'https://sds-721.s3.ap-northeast-2.amazonaws.com/t3.jpg',
       name: 'hong_nft',
       description: 'hong_nft_desc',
       sale: false,

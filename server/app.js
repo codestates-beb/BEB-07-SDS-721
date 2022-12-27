@@ -1,22 +1,25 @@
 const express = require('express');
-const path = require('path');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-dotenv.config();
+const cors = require('cors');
+const morgan = require('morgan');
 const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const connectDB = require('./schemas');
+const connect = require('./schemas');
 
 const devRouter = require('./routes/dev');
 // const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
 
-connectDB();
+connect();
 
 const app = express();
 app.set('port', process.env.PORT || 5050);
 app.set('view engine', 'ejs');
+
+app.use(morgan('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));

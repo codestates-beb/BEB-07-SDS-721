@@ -2,7 +2,7 @@ import './Footer.css';
 
 const Footer = () => {
   return (
-    <div className="footer bg-blue-footer pt-10 text-white">
+    <div className="footer mt-20 bg-blue-footer pt-10 text-white">
       <div className="footer-inner mx-auto w-2/3">
         <div className="h-194 mb-12 flex justify-between">
           <div className="market-info w-[258px]">

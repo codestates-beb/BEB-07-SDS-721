@@ -26,18 +26,9 @@ const Home = () => {
         <p className="mx-auto mb-8 flex h-[84px] w-[876px] items-center justify-center text-6xl font-semibold">
           Explore, collect, and sell NFTs
         </p>
-        <div className="mb-12 flex flex-wrap ">
-          {/* <div className="mr-[50px] flex-1">
-            <NftCard
-              nft_img={nfts[0].img_link}
-              nft_name={nfts[0].name}
-              artist_name={nfts[0].creater}
-              artist_profile={profile_sample}
-              price={nfts[0].price}
-            />
-          </div> */}
+        <div className="grid grid-cols-fill-25 justify-center gap-y-12">
           {nfts.map((nft) => (
-            <div className="mr-[50px] mt-14">
+            <div className="mx-auto">
               <NftCard
                 nft_img={nft.img_link}
                 nft_name={nft.name}
@@ -73,9 +64,8 @@ const Home = () => {
               artist_profile={profile_sample}
               price="1.63"
             />
-          </div>
-           */}
-          <div className="mr-[50px] mt-14">
+          </div> */}
+          <div className="mx-auto">
             <NftCard
               nft_img={sample3}
               nft_name="NFT Name"
@@ -84,7 +74,7 @@ const Home = () => {
               price="1.63"
             />
           </div>
-          <div className="mr-[50px] mt-14">
+          <div className="mx-auto">
             <NftCard
               nft_img={sample4}
               nft_name="NFT Name"

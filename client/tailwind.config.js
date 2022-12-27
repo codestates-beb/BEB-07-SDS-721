@@ -2,6 +2,9 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    gridTemplateColumns: {
+      'fill-25': 'repeat(auto-fit, 320px)',
+    },
     extend: {},
     colors: {
       blue: '#10225a',

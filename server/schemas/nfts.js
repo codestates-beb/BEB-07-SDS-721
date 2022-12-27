@@ -6,10 +6,15 @@ const {
 } = Schema;
 
 const nftSchema = new Schema({
-  token_id: {
+  contractAddress: {
     type: String,
+    required: true,
   },
-  image_link: {
+  tokenId: {
+    type: String,
+    required: true,
+  },
+  imageLink: {
     type: String,
   },
   name: {
@@ -32,9 +37,11 @@ const nftSchema = new Schema({
   },
   owner: {
     type: String,
+    ref: 'User',
   },
   creator: {
     type: String,
+    ref: 'User',
   },
   transactions: [String],
   created: {

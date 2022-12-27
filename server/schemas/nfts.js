@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
+const {
+  Types: { ObjectId },
+} = Schema;
+
 const nftSchema = new Schema({
   token_id: {
     type: String,
@@ -33,8 +37,10 @@ const nftSchema = new Schema({
     type: String,
   },
   transactions: [String],
-  collected: [{ token_id: String }],
-  created: [{ token_id: String }],
+  created: {
+    type: String,
+    ref: 'User',
+  },
 });
 
 module.exports = mongoose.model('Nft', nftSchema);

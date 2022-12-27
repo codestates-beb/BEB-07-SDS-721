@@ -53,7 +53,7 @@ const MyPage = () => {
         Created
       </div>
 
-      <div className=" ml-[10em] mb-12 flex flex-wrap">
+      <div className=" ml-[10em] flex flex-wrap">
         <div className="mr-[5rem] mt-[3rem]">
           <NftCard
             nft_img={sample1}

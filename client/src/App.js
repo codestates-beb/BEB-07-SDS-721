@@ -1,12 +1,29 @@
 import './App.css';
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Footer from 'components/layout/Footer';
+import Header from 'components/layout/Header';
+
+import Explore from 'pages/Explore';
+import Home from 'pages/Home';
+import Mint from 'pages/Mint';
+import MyPage from 'pages/MyPage';
+
 function App() {
   return (
-    <div className="App">
-      <p className="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3">
-        HelloWorld!
-      </p>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/explore" element={<Explore />}></Route>
+          <Route path="/mint" element={<Mint />}></Route>
+          <Route path="/mypage" element={<MyPage />}></Route>
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

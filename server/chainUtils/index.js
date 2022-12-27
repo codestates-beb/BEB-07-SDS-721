@@ -1,6 +1,5 @@
 require('dotenv').config({ path: '../.env' });
 const Web3 = require('web3');
-const fs = require('fs');
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 const { NETWORK, ADDRESS, PK, MNEMONIC, GOERLIURI, GOERLIWEBSOCKET } =

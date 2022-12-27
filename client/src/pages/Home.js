@@ -21,12 +21,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="home mb-28">
+    <div className="home">
       <div className="home-inner mx-auto mt-[19px] w-4/5">
         <p className="mx-auto mb-8 flex h-[84px] w-[876px] items-center justify-center text-6xl font-semibold">
           Explore, collect, and sell NFTs
         </p>
-        <div className="flex h-[387px] flex-wrap">
+        <div className="mb-12 flex flex-wrap ">
           {/* <div className="mr-[50px] flex-1">
             <NftCard
               nft_img={nfts[0].img_link}

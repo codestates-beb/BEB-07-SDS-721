@@ -2,7 +2,7 @@ import './NftCard.css';
 
 const NftCard = (props) => {
   return (
-    <div className="card flex h-[387px] w-[100%] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <div className="card flex h-[382px] w-[270px] flex-col overflow-hidden rounded-2xl bg-white drop-shadow-2xl">
       <img
         src={props.nft_img}
         alt="sample"

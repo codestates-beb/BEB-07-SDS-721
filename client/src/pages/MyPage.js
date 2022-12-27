@@ -8,7 +8,7 @@ import sample1 from 'img/card_sample_1.jpg';
 
 const MyPage = () => {
   return (
-    <div className="mypage h-screen">
+    <div className="mypage">
       <figure className="relative">
         <img
           className="mypageBackGround object-fit: cover w-screen"
@@ -53,7 +53,7 @@ const MyPage = () => {
         Created
       </div>
 
-      <div className=" ml-[10em] flex flex-wrap">
+      <div className=" ml-[10em] mb-12 flex flex-wrap">
         <div className="mr-[5rem] mt-[3rem]">
           <NftCard
             nft_img={sample1}

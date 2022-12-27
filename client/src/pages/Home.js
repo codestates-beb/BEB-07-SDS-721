@@ -5,6 +5,7 @@ import sample1 from 'img/card_sample_1.jpg';
 import sample2 from 'img/card_sample_2.jpg';
 import sample3 from 'img/card_sample_3.jpg';
 import sample4 from 'img/card_sample_4.jpg';
+import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
               nft_img={sample1}
               nft_name="NFT Name"
               artist_name="NFT Artist"
+              artist_profile={profile_sample}
               price="1.63"
             />
           </div>
@@ -27,6 +29,7 @@ const Home = () => {
               nft_img={sample2}
               nft_name="NFT Name"
               artist_name="NFT Artist"
+              artist_profile={profile_sample}
               price="1.63"
             />
           </div>
@@ -35,6 +38,7 @@ const Home = () => {
               nft_img={sample3}
               nft_name="NFT Name"
               artist_name="NFT Artist"
+              artist_profile={profile_sample}
               price="1.63"
             />
           </div>
@@ -43,6 +47,7 @@ const Home = () => {
               nft_img={sample4}
               nft_name="NFT Name"
               artist_name="NFT Artist"
+              artist_profile={profile_sample}
               price="1.63"
             />
           </div>

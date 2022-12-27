@@ -8,18 +8,26 @@ const NftCard = (props) => {
         alt="sample"
         className="h-[209px] w-[100%]"
       ></img>
-      <div className="card-info flex grow justify-center bg-orange pt-[20px]">
-        <div className="nft-info w-10/12 bg-green">
-          <div className="flex h-[60px] w-[100%] flex-col items-start">
+      <div className="card-info flex grow justify-center pt-[20px]">
+        <div className="nft-info w-10/12">
+          <div className="mb-6 flex h-[60px] w-[100%] flex-col items-start">
             <p className="mb-1 text-[22px]">{props.nft_name}</p>
-            <div>
-              <img></img>
-              <div className="font-mono font-normal">{props.artist_name}</div>
+            <div className="flex items-center">
+              <img
+                src={props.artist_profile}
+                alt="none"
+                className="h-6 w-6 overflow-hidden rounded-full"
+              ></img>
+              <div className="ml-2 font-mono font-normal">
+                {props.artist_name}
+              </div>
             </div>
           </div>
           <div>
-            <p className="font-mono">price</p>
-            <p>{`${props.price} ETH`}</p>
+            <p className="font-mono text-xs font-normal leading-[1.1] text-gray">
+              price
+            </p>
+            <p className="font-mono text-base font-normal">{`${props.price} ETH`}</p>
           </div>
         </div>
       </div>

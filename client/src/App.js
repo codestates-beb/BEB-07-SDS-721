@@ -70,6 +70,7 @@ function App() {
           <Route path="/mint" element={<Mint />}></Route>
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
           <Route path="/details" element={<Details />}></Route>
+
         </Routes>
         <Footer />
       </div>

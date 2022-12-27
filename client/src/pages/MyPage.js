@@ -7,7 +7,7 @@ import MyPageSample2 from 'img/myPage_sample_2.png';
 import sample1 from 'img/card_sample_1.jpg';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-const MyPage = () => {
+const MyPage = ({ account }) => {
   return (
     <div className="mypage">
       <figure className="relative">
@@ -32,7 +32,7 @@ const MyPage = () => {
           </div>
           <div className="mt-10">
             <div className="text-3xl text-gray">Account</div>
-            <div>0x247b669cbdd58fca982dbf337c5d94880852e3fa</div>
+            <div>{account}</div>
           </div>
         </div>
 

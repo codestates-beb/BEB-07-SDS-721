@@ -1,7 +1,15 @@
 import './Header.css';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ connectWallet, account, disconnectWallet }) => {
+  const myPageClick = (e) => {
+    console.log(account);
+    if (!account) {
+      e.preventDefault();
+      connectWallet();
+    }
+  };
+
   return (
     <div className="header bg-blue">
       <div className="header-inner relative mx-auto h-20 w-5/6">
@@ -17,13 +25,25 @@ const Header = () => {
           <Link to="/mint" className="category-item">
             <li>Mint</li>
           </Link>
-          <Link to="/mypage" className="category-item">
+          <Link to="/mypage" className="category-item" onClick={myPageClick}>
             <li>MyPage</li>
           </Link>
           <li className="h-[100%]">
-            <button className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-lg bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light">
-              Log In
-            </button>
+            {account ? (
+              <button
+                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-lg bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                onClick={disconnectWallet}
+              >
+                Log Out
+              </button>
+            ) : (
+              <button
+                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-lg bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                onClick={connectWallet}
+              >
+                Log In
+              </button>
+            )}
           </li>
         </ul>
       </div>

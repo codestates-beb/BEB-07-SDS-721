@@ -7,7 +7,6 @@ import sample2 from 'img/card_sample_2.jpg';
 import sample3 from 'img/card_sample_3.jpg';
 import sample4 from 'img/card_sample_4.jpg';
 import profile_sample from 'img/profile_sample.jpg';
-import { BrowserRouter, Route } from 'react-router-dom';
 
 const Home = () => {
   const [nfts, setNfts] = useState([]);

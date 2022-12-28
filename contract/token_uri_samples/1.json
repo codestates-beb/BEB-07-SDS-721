@@ -1,0 +1,11 @@
+{
+  "name": "man #1",
+  "description": "man #1 description",
+  "image": "https://randomuser.me/api/portraits/men/1.jpg",
+  "attributes": [
+    {
+      "trait_type": "city",
+      "value": "newyork"
+    }
+  ]
+}

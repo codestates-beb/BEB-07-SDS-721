@@ -1,19 +1,33 @@
 import './Details.css';
 
+import { useState, useEffect } from 'react';
+
 import NftCard from 'components/features/NftCard';
 
-import sample4 from 'img/card_sample_4.jpg';
 import profile_sample from 'img/profile_sample.jpg';
 
 const Details = () => {
+  const [nft, setDetailNFT] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      'http://snowdelver.iptime.org/nfts/0x456B5b4595D4CEeB43fEd7Fa3066745e6b19eaB2/1',
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setDetailNFT(res);
+        console.log(res);
+      });
+  }, []);
+
   return (
     <div className="details flex min-h-screen gap-4">
       <div className="sidebar w-[400px] shrink-0 flex-col">
         <div className="m-[50px]">
           <NftCard
-            nft_img={sample4}
-            nft_name="NFT Name"
-            artist_name="NFT Artist"
+            nft_img={nft.image}
+            nft_name={nft.name}
+            artist_name={nft.creator}
             artist_profile={profile_sample}
             price="1.63"
           />
@@ -27,32 +41,14 @@ const Details = () => {
         </button>
       </div>
       <div className="description m-[50px] grow">
-        <div className="mb-[5px] text-7xl">The Whale Shark</div>
+        <div className="mb-[5px] text-7xl">{nft.name}</div>
         <div className="text-1xl mt-[5px] font-extralight text-gray">
           Minted On Sep 30, 2022
         </div>
         <div className="mt-[30px] text-3xl text-gray">Created By</div>
-        <div className="mt-[5px]">NotoriousHong</div>
+        <div className="mt-[5px]">{nft.creator}</div>
         <div className="mt-[30px] text-3xl text-gray">Description</div>
-        <div className="mt-[5px] text-3xl">
-          The whale shark (Rhincodon typus) is a slow-moving, filter-feeding
-          carpet shark and the largest known extant fish species. The largest
-          confirmed individual had a length of 18.8 m (61.7 ft).[9] The whale
-          shark holds many records for size in the animal kingdom, most notably
-          being by far the largest living nonmammalian vertebrate. It is the
-          sole member of the genus Rhincodon and the only extant member of the
-          family Rhincodontidae, which belongs to the subclass Elasmobranchii in
-          the class Chondrichthyes. Before 1984 it was classified as Rhiniodon
-          into Rhinodontidae. The whale shark is found in open waters of the
-          tropical oceans and is rarely found in water below 21 °C (70 °F).[2]
-          Studies looking at vertebral growth bands and the growth rates of
-          free-swimming sharks have estimated whale shark lifespans at 80–130
-          years.[10][11][12] Whale sharks have very large mouths and are filter
-          feeders, which is a feeding mode that occurs in only two other sharks,
-          the megamouth shark and the basking shark. They feed almost
-          exclusively on plankton and small fishes, and pose no threat to
-          humans.
-        </div>
+        <div className="mt-[5px] text-3xl">{nft.description}</div>
       </div>
     </div>
   );

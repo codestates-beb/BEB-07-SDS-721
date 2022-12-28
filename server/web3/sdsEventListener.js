@@ -3,10 +3,11 @@ const axios = require('axios');
 const Nft = require('../schemas/nfts');
 const User = require('../schemas/users');
 const Collection = require('../schemas/collections');
+const { use } = require('../app');
 // TODO: make it receive variables and wrap it for multiple listener
 const GOERLIWEBSOCKET =
   'wss://goerli.infura.io/ws/v3/f09f2f4de3164c8eb1a057b84bae7113';
-const CA = '0x456B5b4595D4CEeB43fEd7Fa3066745e6b19eaB2';
+const CA = '0x16022D988442C70682e3566d09cd67d86e1b79e4';
 const sdhAddress = '0x7C54f2BC695d540887B0975FEFe36E4a74b66f26';
 const ABI = [
   {
@@ -435,11 +436,17 @@ const getTokenURIData = async (tokenURI) => {
   }
 };
 
+const updateUserDB = async (account) => {
+  // 1. db에서 유저 조회한다.
+  let user = await User.findOne({ account });
+  if (!user) {
+    user = await User.create({ account });
+  }
+  return user;
+};
+
 const updateNftDB = async (tokenData) => {
-  // 1. 먼저 해당 nft가 db에 존재하는지 확인한다.
-  // 2. 있으면 업데이트 한다.
-  // 3. 없으면 새로 만든다.
-  const { contractAddress, tokenId } = tokenData;
+  const { contractAddress, tokenId, creator, owner } = tokenData;
   let nft = await Nft.findOne({ contractAddress, tokenId });
   console.log('is nft found?', nft);
   if (!nft) {
@@ -449,9 +456,17 @@ const updateNftDB = async (tokenData) => {
     console.log('nft found, update existing one');
     nft.updateOne({ tokenData }); // TODO: potential bug point, NOT FIXED.
   }
+  await User.updateOne(
+    { account: creator },
+    { $addToSet: { created: nft._id } },
+  );
+  await User.updateOne(
+    { account: owner },
+    { $addToSet: { collected: nft._id } },
+  );
+  return nft;
 };
 
-const updateUserDB = async () => {};
 const updateCollectionDB = async (tokenData) => {
   const { contractAddress } = tokenData;
   let collection = await Collection.findOne({ contractAddress });
@@ -472,8 +487,6 @@ const updateCollectionDB = async (tokenData) => {
 
 module.exports = () => {
   Contract.events.Transfer().on('data', async (event) => {
-    // 1. query chain for detailed information
-    // extract tokenid from event data
     const { transactionHash, address, returnValues } = event;
     const { tokenId, to } = returnValues;
     // get metadata of minted nft with web3 call
@@ -489,20 +502,9 @@ module.exports = () => {
     tokenData.owner = to;
     tokenData.creator = sdhAddress; // TODO make variable
 
-    // 2. update nft db
     await updateCollectionDB(tokenData);
+    await updateUserDB(tokenData.owner);
+    await updateUserDB(tokenData.creator);
     await updateNftDB(tokenData);
-    // 3. update user db
-    await updateUserDB(tokenData);
-    // 4. update contract db
   });
 };
-
-// const dbTestFunc = async () => {
-//   const tokenURIData = await getTokenURIData(
-//     'https://sds-721.s3.ap-northeast-2.amazonaws.com/8.json',
-//   );
-//   updateNft(7, CA, tokenURIData);
-// };
-
-// dbTestFunc();

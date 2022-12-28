@@ -1,3 +1,4 @@
+const { query } = require('express');
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
 
@@ -39,7 +40,8 @@ module.exports = {
       return next(err);
     }
   },
-  userNfts: async (req, res, next) => {
+
+  allUserNfts: async (req, res, next) => {
     try {
       const { account } = req.params;
       const queryResult = await User.findOne({ account });
@@ -48,7 +50,45 @@ module.exports = {
           .status(404)
           .json({ status: 'error', message: 'no such user' });
       }
-      const nfts = await Nft.find({ tokenId: queryResult.collected });
+      const nfts = await Nft.find({
+        _id: [...queryResult.collected, ...queryResult.created],
+      });
+      return res.status(200).json(nfts);
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  },
+  createdUserNfts: async (req, res, next) => {
+    try {
+      const { account } = req.params;
+      const queryResult = await User.findOne({ account });
+      if (!queryResult) {
+        return res
+          .status(404)
+          .json({ status: 'error', message: 'no such user' });
+      }
+      const nfts = await Nft.find({
+        _id: [...queryResult.created],
+      });
+      return res.status(200).json(nfts);
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  },
+  collectedUserNfts: async (req, res, next) => {
+    try {
+      const { account } = req.params;
+      const queryResult = await User.findOne({ account });
+      if (!queryResult) {
+        return res
+          .status(404)
+          .json({ status: 'error', message: 'no such user' });
+      }
+      const nfts = await Nft.find({
+        _id: [...queryResult.collected],
+      });
       return res.status(200).json(nfts);
     } catch (err) {
       console.error(err);

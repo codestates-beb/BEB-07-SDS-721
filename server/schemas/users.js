@@ -12,8 +12,11 @@ const userSchema = new Schema({
     type: String,
     default: 'anonymous',
   },
-  collected: [String],
-  created: [String],
+  collected: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Nft',
+  },
+  created: [Schema.Types.ObjectId],
 });
 
 module.exports = mongoose.model('User', userSchema);

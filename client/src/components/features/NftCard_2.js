@@ -2,7 +2,7 @@ import './NftCard_2.css';
 
 const NftCard2 = (props) => {
   return (
-    <div className="card flex w-[490px] flex-col overflow-hidden rounded-2xl bg-white drop-shadow-2xl">
+    <div className="card flex w-[490px] flex-col overflow-hidden rounded-2xl bg-white drop-shadow-md">
       {props.img_check ? (
         <img
           src={`https://ipfs.io/ipfs/${props.ipfs_hash}`}

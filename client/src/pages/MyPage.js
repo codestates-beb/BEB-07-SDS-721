@@ -13,9 +13,7 @@ const MyPage = ({ account }) => {
   const [created, setCreate] = useState([]);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}`)
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
@@ -24,9 +22,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/collected',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}/collected`)
       .then((res) => res.json())
       .then((res) => {
         setCollect([...res]);
@@ -35,9 +31,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/created',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}/created`)
       .then((res) => res.json())
       .then((res) => {
         setCreate([...res]);
@@ -69,7 +63,7 @@ const MyPage = ({ account }) => {
           </div>
         </div>
 
-        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center shadow-2xl shadow-inner">
+        <div className="mt-[10rem] h-7 w-28 rounded-xl border-2 bg-gray-light text-center shadow-2xl shadow-inner">
           Collected
         </div>
 
@@ -79,7 +73,7 @@ const MyPage = ({ account }) => {
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}
-                artist_name={nft.creator}
+                artist_name={nft.owner}
                 artist_profile={profile_sample}
                 price={nft.price}
               />
@@ -87,7 +81,7 @@ const MyPage = ({ account }) => {
           ))}
         </div>
 
-        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center">
+        <div className="mt-[10rem] h-7 w-28 rounded-xl border-2 bg-gray-light text-center">
           Created
         </div>
 

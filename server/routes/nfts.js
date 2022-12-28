@@ -2,7 +2,7 @@ const express = require('express');
 const {
   getAllNfts,
   getContractNfts,
-  postNft,
+  mintNft,
   getNft,
 } = require('../controllers/nftsController');
 
@@ -11,6 +11,6 @@ const router = express.Router();
 router.get('/', getAllNfts);
 router.get('/:contractAddress', getContractNfts);
 router.get('/:contractAddress/:tokenId', getNft);
-router.post('/:contractAddress/:tokenId', postNft);
+router.post('/:contractAddress', mintNft);
 
 module.exports = router;

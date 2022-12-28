@@ -5,7 +5,11 @@ module.exports = {
     gridTemplateColumns: {
       'fill-25': 'repeat(auto-fit, 350px)',
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        workSans: ['Work Sans', 'sans-serif'],
+      },
+    },
     colors: {
       blue: '#10225a',
       purple: '#7e5bef',

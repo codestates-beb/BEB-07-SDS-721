@@ -1,0 +1,11 @@
+{
+  "name": "woman #8",
+  "description": "woman #8 description",
+  "image": "https://randomuser.me/api/portraits/women/8.jpg",
+  "attributes": [
+    {
+      "trait_type": "city",
+      "value": "tokyo"
+    }
+  ]
+}

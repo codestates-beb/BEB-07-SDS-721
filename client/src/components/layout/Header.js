@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 
 const Header = ({ connectWallet, account, disconnectWallet }) => {
   const myPageClick = (e) => {
-    console.log(account);
+    if (!account) {
+      e.preventDefault();
+      connectWallet();
+    }
+  };
+
+  const mintPageClick = (e) => {
     if (!account) {
       e.preventDefault();
       connectWallet();
@@ -22,7 +28,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
           <Link to="/explore" className="category-item ">
             <li>Explore</li>
           </Link>
-          <Link to="/mint" className="category-item">
+          <Link to="/mint" className="category-item" onClick={mintPageClick}>
             <li>Mint</li>
           </Link>
           <Link to="/mypage" className="category-item" onClick={myPageClick}>
@@ -31,7 +37,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
           <li className="h-[100%]">
             {account ? (
               <button
-                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-lg bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
                 onClick={disconnectWallet}
               >
                 Log Out

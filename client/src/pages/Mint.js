@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import profile_sample from 'img/profile_sample.jpg';
 
-const Mint = () => {
+const Mint = ({ account }) => {
   const [ipfsHash, setIpfsHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
@@ -66,10 +66,12 @@ const Mint = () => {
   };
 
   const submit = async (e) => {
+    e.preventDefault();
     if (!city || !description || !nftName) alert('please write all field!');
 
     try {
-      await axios.post('url', {
+      const data = {
+        recipient: account,
         name: nftName,
         description: description,
         image: `https://ipfs.io/ipfs/${ipfsHash}`,
@@ -79,10 +81,38 @@ const Mint = () => {
             value: city,
           },
         ],
-      });
-    } catch {
-      alert('error!');
-    }
+      };
+
+      console.log(JSON.stringify(data));
+
+      const res = await fetch(
+        'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
+        {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+          referrerPolicy: 'no-referrer',
+          body: JSON.stringify(data),
+        },
+      );
+
+      console.log(res);
+
+      // console.log('start post');
+      // const res = await axios.post(
+      //   'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
+      //   JSON.stringify(data),
+      //   {
+      //     headers: { 'Content-Type': `application/json` },
+      //   },
+      // );
+      // console.log(res);
+    } catch {}
   };
 
   return (
@@ -120,7 +150,7 @@ const Mint = () => {
             <h1 className="mb-2 h-[98px] w-[483px] text-[80px] font-bold">
               Create NFT
             </h1>
-            <p className="h-8 text-xl font-normal">
+            <p className="mx-[5px] h-8 text-xl font-normal">
               Welcome! Enter Your Details And Start Creating.
             </p>
           </div>
@@ -128,24 +158,26 @@ const Mint = () => {
           <form className="flex flex-col">
             <input
               placeholder="Name"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={inputChange}
             ></input>
             <input
               placeholder="City"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={cityChange}
             ></input>
             <textarea
               placeholder="Description"
-              className="mb-4 h-[165px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="description mb-4 h-[165px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={descriptChange}
             ></textarea>
             <button
               onClick={submit}
               className="shadow-black h-[45px] rounded-2xl border-2 bg-blue"
             >
-              <h1 className="font-semibold text-white">Create NFT</h1>
+              <h1 className="font-semibold text-white  drop-shadow-md">
+                Create NFT
+              </h1>
             </button>
           </form>
         </div>

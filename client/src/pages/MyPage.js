@@ -13,7 +13,7 @@ const MyPage = ({ account }) => {
   const [created, setCreate] = useState([]);
 
   useEffect(() => {
-    fetch(`http://snowdelver.iptime.org/users/${account}/`)
+    fetch(`http://snowdelver.iptime.org/users/${account}`)
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
@@ -73,7 +73,7 @@ const MyPage = ({ account }) => {
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}
-                artist_name={nft.creator}
+                artist_name={nft.owner}
                 artist_profile={profile_sample}
                 price={nft.price}
               />

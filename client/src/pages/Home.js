@@ -28,7 +28,7 @@ const Home = () => {
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}
-                artist_name={nft.creater}
+                artist_name={nft.owner}
                 artist_profile={profile_sample}
                 price={nft.price}
               />

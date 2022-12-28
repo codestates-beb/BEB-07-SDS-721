@@ -3,6 +3,7 @@ import { useState } from 'react';
 import NftCard2 from 'components/features/NftCard_2';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
+import axios from 'axios';
 
 import profile_sample from 'img/profile_sample.jpg';
 
@@ -10,6 +11,8 @@ const Mint = () => {
   const [ipfsHash, setIpfsHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
+  const [description, setDescription] = useState('');
+  const [city, setCity] = useState('');
 
   const captureFile = (event) => {
     event.preventDefault();
@@ -54,6 +57,34 @@ const Mint = () => {
     setNftName(e.target.value);
   };
 
+  const cityChange = (e) => {
+    setCity(e.target.value);
+  };
+
+  const descriptChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const submit = async (e) => {
+    if (!city || !description || !nftName) alert('please write all field!');
+
+    try {
+      await axios.post('url', {
+        name: nftName,
+        description: description,
+        image: `https://ipfs.io/ipfs/${ipfsHash}`,
+        attributes: [
+          {
+            trait_type: 'city',
+            value: city,
+          },
+        ],
+      });
+    } catch {
+      alert('error!');
+    }
+  };
+
   return (
     <div className="mint">
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
@@ -85,7 +116,7 @@ const Mint = () => {
           )}
         </div>
         <div className="w-[600px]">
-          <div className="mb-12">
+          <div className="mb-8">
             <h1 className="mb-2 h-[98px] w-[483px] text-[80px] font-bold">
               Create NFT
             </h1>
@@ -97,14 +128,23 @@ const Mint = () => {
           <form className="flex flex-col">
             <input
               placeholder="Name"
-              className="mb-4 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
               onChange={inputChange}
+            ></input>
+            <input
+              placeholder="City"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              onChange={cityChange}
             ></input>
             <textarea
               placeholder="Description"
-              className="mb-4 h-[187px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-4 h-[165px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              onChange={descriptChange}
             ></textarea>
-            <button className="shadow-black h-[45px] rounded-2xl border-2 bg-blue">
+            <button
+              onClick={submit}
+              className="shadow-black h-[45px] rounded-2xl border-2 bg-blue"
+            >
               <h1 className="font-semibold text-white">Create NFT</h1>
             </button>
           </form>

@@ -13,7 +13,7 @@ const NftCard2 = (props) => {
         <div className="h-[390px] w-[100%] bg-gray-light"></div>
       )}
 
-      <div className="card-info flex h-[109px] grow justify-center pt-[20px]">
+      <div className="card-info flex h-[120px] grow justify-center pt-[25px]">
         <div className="nft-info w-10/12">
           <div className="mb-6 flex h-[60px] w-[100%] flex-col items-start">
             <p className="mb-1 text-[22px]">{props.nft_name}</p>

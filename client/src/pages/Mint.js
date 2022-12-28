@@ -1,12 +1,14 @@
 import './Mint.css';
 import { useState } from 'react';
 import NftCard2 from 'components/features/NftCard_2';
+import { Buffer } from 'buffer';
+import IpfsAPI from 'ipfs-api';
 
 import profile_sample from 'img/profile_sample.jpg';
 
 const Mint = () => {
   const [ipfsHash, setIpfsHash] = useState('');
-  const [buffer, setBuffer] = useState(null);
+  const [imgCheck, setImgCheck] = useState(false);
 
   const captureFile = (event) => {
     event.preventDefault();
@@ -15,23 +17,67 @@ const Mint = () => {
     reader.readAsArrayBuffer(file);
     reader.onloadend = async () => {
       const buf = await Buffer.from(reader.result);
-      setBuffer(buf);
-      console.log(buffer);
+      uploadIpfs(buf);
     };
+  };
+
+  const uploadIpfs = (buffer) => {
+    const projectId = '2JWdyQN1UEFEdzya3a30jPQVb97';
+    const projectSecret = '36d47b82182e7e1d41db4ee5f9e0ce8d';
+    const auth =
+      'Basic ' +
+      Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+    const ipfs = IpfsAPI({
+      host: 'ipfs.infura.io',
+      port: 5001,
+      protocol: 'https',
+      headers: {
+        authorization: auth,
+      },
+    });
+
+    ipfs.files.add(buffer, (err, file) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(file[0].hash);
+      setIpfsHash(file[0].hash);
+      setImgCheck(true);
+    });
+
+    console.log(ipfsHash);
   };
 
   return (
     <div className="mint">
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
-        <div className="mr-24">
+        <div className="relative mr-24">
           <NftCard2
+            img_check={imgCheck}
+            ipfs_hash={ipfsHash}
             nft_name="Will be NFT Name"
             artist_profile={profile_sample}
             artist_name="test"
           />
-          <form>
-            <input type="file" onChange={captureFile} />
-          </form>
+          {imgCheck ? (
+            <></>
+          ) : (
+            <form className="absolute inset-y-0 inset-x-0 my-[170px] mx-auto h-[60px] w-[60px] rounded-full bg-white text-6xl text-white">
+              <label
+                className="block flex w-[100%] justify-center text-gray-light hover:cursor-pointer hover:text-gray"
+                for="file-input"
+              >
+                <div>+</div>
+              </label>
+              <input
+                type="file"
+                id="file-input"
+                style={{ display: 'none' }}
+                onChange={captureFile}
+              />
+            </form>
+          )}
         </div>
         <div className="w-[600px]">
           <div className="mb-12">
@@ -56,11 +102,6 @@ const Mint = () => {
               <h1 className="font-semibold text-white">Create NFT</h1>
             </button>
           </form>
-          {/* <div>
-            <input>Name</input>
-            <textarea placeholder='description'></textarea>
-            <button>Create NFT</button>
-          </div> */}
         </div>
       </div>
     </div>

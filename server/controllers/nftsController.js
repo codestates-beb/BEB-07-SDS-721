@@ -4,13 +4,11 @@ const AWS = require('aws-sdk');
 const Web3 = require('web3');
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
+const Collection = require('../schemas/collections');
 const sds721ABI = require('../chainUtils/sds721ABI');
+const womanNftABI = require('../chainUtils/womanNftABI');
 
-const { PK, GOERLIURI } = process.env;
-
-// const sds721CA = '0x16022D988442C70682e3566d09cd67d86e1b79e4';
-// const web3 = new Web3(new Web3.providers.HttpProvider(GOERLIURI));
-// const contract = new web3.eth.Contract(sds721ABI, sds721CA);
+const { SDS721CA, WOMANNFTCA, SEOLPK, KWONPK, GOERLIURI } = process.env;
 
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -87,8 +85,6 @@ module.exports = {
     }
   },
   mintNft: async (req, res, next) => {
-    // ipfs uri : https://ipfs.io/ipfs/QmdnbubfpnwV9SVH3f2c6rh2q8QFt76AUdbW8W68UoLid9
-    // 1. req body에서 입력을 받는다.
     try {
       const { contractAddress } = req.params;
       if (!contractAddress) {
@@ -97,8 +93,28 @@ module.exports = {
           message: 'valid contract address must be provided',
         });
       }
-      const CA = '0x16022D988442C70682e3566d09cd67d86e1b79e4';
-      const ABI = sds721ABI; // TODO: make variable
+
+      let CA;
+      let ABI;
+      let PK;
+
+      if (contractAddress === SDS721CA) {
+        console.log('contract is SDS721');
+        CA = SDS721CA;
+        ABI = sds721ABI;
+        PK = SEOLPK;
+      } else if (contractAddress === WOMANNFTCA) {
+        console.log('contract is womanNFT');
+        CA = WOMANNFTCA;
+        ABI = womanNftABI;
+        PK = SEOLPK;
+      } else {
+        return res.status(403).json({
+          status: 'error',
+          message: 'contractAddress should be registered on server first',
+        });
+      }
+
       const web3 = new Web3(new Web3.providers.HttpProvider(GOERLIURI));
       const contract = new web3.eth.Contract(ABI, CA);
 

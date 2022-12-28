@@ -13,9 +13,7 @@ const MyPage = ({ account }) => {
   const [created, setCreate] = useState([]);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}/`)
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
@@ -24,9 +22,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/collected',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}/collected`)
       .then((res) => res.json())
       .then((res) => {
         setCollect([...res]);
@@ -35,9 +31,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/created',
-    )
+    fetch(`http://snowdelver.iptime.org/users/${account}/created`)
       .then((res) => res.json())
       .then((res) => {
         setCreate([...res]);

@@ -2,10 +2,6 @@ import './Home.css';
 import NftCard from 'components/features/NftCard';
 import { useState, useEffect } from 'react';
 
-import sample1 from 'img/card_sample_1.jpg';
-import sample2 from 'img/card_sample_2.jpg';
-import sample3 from 'img/card_sample_3.jpg';
-import sample4 from 'img/card_sample_4.jpg';
 import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
@@ -28,7 +24,7 @@ const Home = () => {
         </p>
         <div className="grid grid-cols-fill-25 justify-center gap-y-12">
           {nfts.map((nft) => (
-            <div className="mx-auto">
+            <div className="mx-auto" key={nft.transactionHash}>
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}

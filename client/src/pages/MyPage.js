@@ -1,11 +1,12 @@
 import './MyPage.css';
 
+import { BrowserRouter, Route } from 'react-router-dom';
+
 import NftCard from 'components/features/NftCard';
 import MyPageSample1 from 'img/myPage_sample_1.png';
 import MyPageSample2 from 'img/myPage_sample_2.png';
 
 import sample1 from 'img/card_sample_1.jpg';
-import { BrowserRouter, Route } from 'react-router-dom';
 
 const MyPage = ({ account }) => {
   return (
@@ -26,10 +27,6 @@ const MyPage = ({ account }) => {
       <div className="mypage-inner ml-[10em]">
         <div className="ProfileInfo mt-[15rem]">
           <div className="text-6xl">Atoye</div>
-          <div className="mt-10">
-            <div className="text-3xl text-gray">Bio</div>
-            <div>The Blockchain's Creative Engineer</div>
-          </div>
           <div className="mt-10">
             <div className="text-3xl text-gray">Account</div>
             <div>{account}</div>

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import profile_sample from 'img/profile_sample.jpg';
 
-const Mint = () => {
+const Mint = ({ account }) => {
   const [ipfsHash, setIpfsHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
@@ -66,10 +66,12 @@ const Mint = () => {
   };
 
   const submit = async (e) => {
+    e.preventDefault();
     if (!city || !description || !nftName) alert('please write all field!');
 
     try {
-      await axios.post('url', {
+      const data = {
+        recipient: account,
         name: nftName,
         description: description,
         image: `https://ipfs.io/ipfs/${ipfsHash}`,
@@ -79,10 +81,38 @@ const Mint = () => {
             value: city,
           },
         ],
-      });
-    } catch {
-      alert('error!');
-    }
+      };
+
+      console.log(JSON.stringify(data));
+
+      const res = await fetch(
+        'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
+        {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+          referrerPolicy: 'no-referrer',
+          body: JSON.stringify(data),
+        },
+      );
+
+      console.log(res);
+
+      // console.log('start post');
+      // const res = await axios.post(
+      //   'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
+      //   JSON.stringify(data),
+      //   {
+      //     headers: { 'Content-Type': `application/json` },
+      //   },
+      // );
+      // console.log(res);
+    } catch {}
   };
 
   return (

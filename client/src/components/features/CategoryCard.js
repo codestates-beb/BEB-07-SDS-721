@@ -2,7 +2,7 @@ import './CategoryCard.css';
 
 const CategoryCard = (props) => {
   return (
-    <div className="card w-[400px] overflow-hidden rounded-2xl bg-white drop-shadow-2xl">
+    <div className="card w-[400px] overflow-hidden rounded-2xl bg-white drop-shadow-md transition-all hover:scale-105">
       <img
         src={props.category_img}
         alt="sample"

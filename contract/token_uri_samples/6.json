@@ -1,0 +1,11 @@
+{
+  "name": "man #6",
+  "description": "man #6 description",
+  "image": "https://randomuser.me/api/portraits/men/6.jpg",
+  "attributes": [
+    {
+      "trait_type": "city",
+      "value": "seoul"
+    }
+  ]
+}

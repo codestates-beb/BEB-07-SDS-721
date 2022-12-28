@@ -23,11 +23,14 @@ const Footer = () => {
               straight to your inbox.
             </p>
             <form>
-              <input placeholder="Enter your email here"></input>
+              <input
+                className="my-[1rem] h-[2rem] w-[17rem] rounded-md font-semibold"
+                placeholder="   Enter your email here"
+              ></input>
             </form>
           </div>
         </div>
-        <p className="border-t-2 border-gray-light pb-5 pt-4">
+        <p className="border-t-2 border-gray-light pb-5 pt-4 font-comforter">
           Ⓒ 2022-2023 SDS-721, Inc
         </p>
       </div>

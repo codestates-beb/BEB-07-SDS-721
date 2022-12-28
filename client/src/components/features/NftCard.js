@@ -12,7 +12,7 @@ const NftCard = (props) => {
         <div className="nft-info w-10/12">
           <div className="mb-6 flex h-[60px] w-[100%] flex-col items-start">
             <p className="mb-1 text-[22px]">{props.nft_name}</p>
-            <div className="flex items-center">
+            <div className="flex justify-start overflow-hidden">
               <img
                 src={props.artist_profile}
                 alt="none"

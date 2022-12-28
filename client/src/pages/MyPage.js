@@ -1,14 +1,50 @@
 import './MyPage.css';
 
-import { BrowserRouter, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import NftCard from 'components/features/NftCard';
 import MyPageSample1 from 'img/myPage_sample_1.png';
 import MyPageSample2 from 'img/myPage_sample_2.png';
-
-import sample1 from 'img/card_sample_1.jpg';
+import profile_sample from 'img/profile_sample.jpg';
 
 const MyPage = ({ account }) => {
+  const [user, setUser] = useState([]);
+  const [collected, setCollect] = useState([]);
+  const [created, setCreate] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/',
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setUser(res);
+        console.log(res);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(
+      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/collected',
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setCollect([...res]);
+        console.log(res);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(
+      'http://snowdelver.iptime.org/users/0x7C54f2BC695d540887B0975FEFe36E4a74b66f26/created',
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setCreate([...res]);
+        console.log(res);
+      });
+  }, []);
+
   return (
     <div className="mypage">
       <figure className="relative">
@@ -26,26 +62,29 @@ const MyPage = ({ account }) => {
 
       <div className="mypage-inner ml-[10em]">
         <div className="ProfileInfo mt-[15rem]">
-          <div className="text-6xl">Atoye</div>
+          <div className="text-6xl">{user.nickname}</div>
           <div className="mt-10">
             <div className="text-3xl text-gray">Account</div>
-            <div>{account}</div>
+            <div>{user.account}</div>
           </div>
         </div>
 
-        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center">
+        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center shadow-2xl shadow-inner">
           Collected
         </div>
 
         <div className="mt-[3rem] grid grid-cols-fill-25 justify-start">
-          <div className="">
-            <NftCard
-              nft_img={sample1}
-              nft_name="NFT Name"
-              artist_name="NFT Artist"
-              price="1.63"
-            />
-          </div>
+          {collected.map((nft) => (
+            <div className="" key={nft.transactionHash}>
+              <NftCard
+                nft_img={nft.image}
+                nft_name={nft.name}
+                artist_name={nft.creator}
+                artist_profile={profile_sample}
+                price={nft.price}
+              />
+            </div>
+          ))}
         </div>
 
         <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center">
@@ -53,38 +92,17 @@ const MyPage = ({ account }) => {
         </div>
 
         <div className="mt-[3rem] grid grid-cols-fill-25 justify-start gap-y-12">
-          <div className="">
-            <NftCard
-              nft_img={sample1}
-              nft_name="NFT Name"
-              artist_name="NFT Artist"
-              price="1.63"
-            />
-          </div>
-          <div className="">
-            <NftCard
-              nft_img={sample1}
-              nft_name="NFT Name"
-              artist_name="NFT Artist"
-              price="1.63"
-            />
-          </div>
-          <div className="">
-            <NftCard
-              nft_img={sample1}
-              nft_name="NFT Name"
-              artist_name="NFT Artist"
-              price="1.63"
-            />
-          </div>
-          <div className="">
-            <NftCard
-              nft_img={sample1}
-              nft_name="NFT Name"
-              artist_name="NFT Artist"
-              price="1.63"
-            />
-          </div>
+          {created.map((nft) => (
+            <div className="" key={nft.transactionHash}>
+              <NftCard
+                nft_img={nft.image}
+                nft_name={nft.name}
+                artist_name={nft.creator}
+                artist_profile={profile_sample}
+                price={nft.price}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>

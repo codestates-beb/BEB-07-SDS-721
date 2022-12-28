@@ -1,4 +1,3 @@
-const { query } = require('express');
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
 

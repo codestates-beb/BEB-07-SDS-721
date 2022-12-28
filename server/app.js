@@ -13,14 +13,22 @@ connect();
 const devRouter = require('./routes/dev');
 const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
-const sdsEventListener = require('./web3/sdsEventListener');
+const {
+  sds721EventListener,
+  womanNftEventListener,
+} = require('./web3/txEventListener');
 
 const app = express();
-app.set('port', process.env.PORT || 5051);
+app.set('port', process.env.PORT || 5050);
 app.set('view engine', 'ejs');
 
 app.use(morgan('dev'));
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -56,6 +64,6 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), 'is up and listening');
 });
-sdsEventListener();
-
+sds721EventListener();
+womanNftEventListener();
 module.exports = app;

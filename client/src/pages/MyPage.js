@@ -63,7 +63,7 @@ const MyPage = ({ account }) => {
           </div>
         </div>
 
-        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center shadow-2xl shadow-inner">
+        <div className="mt-[10rem] h-7 w-28 rounded-xl border-2 bg-gray-light text-center shadow-2xl shadow-inner">
           Collected
         </div>
 
@@ -81,7 +81,7 @@ const MyPage = ({ account }) => {
           ))}
         </div>
 
-        <div className="mt-[10rem] h-7 w-28 rounded-md border-2 bg-gray-light text-center">
+        <div className="mt-[10rem] h-7 w-28 rounded-xl border-2 bg-gray-light text-center">
           Created
         </div>
 

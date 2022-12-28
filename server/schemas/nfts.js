@@ -14,7 +14,7 @@ const nftSchema = new Schema({
     type: String,
     required: true,
   },
-  imageLink: {
+  image: {
     type: String,
   },
   name: {
@@ -43,10 +43,8 @@ const nftSchema = new Schema({
     type: String,
     ref: 'User',
   },
-  transactions: [String],
-  created: {
+  transactionHash: {
     type: String,
-    ref: 'User',
   },
 });
 

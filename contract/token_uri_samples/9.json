@@ -1,0 +1,11 @@
+{
+  "name": "man #9",
+  "description": "man #9 description",
+  "image": "https://randomuser.me/api/portraits/men/9.jpg",
+  "attributes": [
+    {
+      "trait_type": "city",
+      "value": "pyeongyang"
+    }
+  ]
+}

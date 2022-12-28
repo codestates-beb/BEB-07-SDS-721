@@ -3,15 +3,6 @@ const Nft = require('../schemas/nfts');
 const dummyData = require('../dummyData');
 
 module.exports = {
-  uploadDummyNfts: async (req, res, next) => {
-    const arr = dummyData.nfts;
-    await Nft.create(arr[0]);
-    await Nft.create(arr[1]);
-    await Nft.create(arr[2]);
-    return res
-      .status(200)
-      .json({ status: 'ok', message: 'nft data imported to db server' });
-  },
   getAllNfts: async (req, res, next) => {
     const { theme, sale } = req.query;
     let foundNft;

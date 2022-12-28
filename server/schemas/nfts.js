@@ -17,6 +17,9 @@ const nftSchema = new Schema({
   image: {
     type: String,
   },
+  attributes: {
+    type: Array,
+  },
   name: {
     type: String,
     default: 'unknown',

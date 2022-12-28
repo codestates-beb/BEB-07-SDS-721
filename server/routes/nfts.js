@@ -4,7 +4,6 @@ const {
   getContractNfts,
   postNft,
   getNft,
-  uploadDummyNfts,
 } = require('../controllers/nftsController');
 
 const router = express.Router();

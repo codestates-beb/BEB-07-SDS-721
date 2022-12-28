@@ -7,7 +7,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        comforter: ['Comforter Brush', 'cursive'],
+        workSans: ['Work Sans', 'sans-serif'],
       },
     },
     colors: {

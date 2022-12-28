@@ -4,6 +4,7 @@ const connect = () => {
   if (process.env.SERVER_ENV !== 'production') {
     mongoose.set('debug', true);
   }
+  mongoose.set('strictQuery', false);
 
   mongoose.connect(
     process.env.MONGO_URI,

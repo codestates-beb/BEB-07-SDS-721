@@ -1,0 +1,11 @@
+{
+  "name": "man #2",
+  "description": "man #2 description",
+  "image": "https://randomuser.me/api/portraits/men/2.jpg",
+  "attributes": [
+    {
+      "trait_type": "city",
+      "value": "surinam"
+    }
+  ]
+}

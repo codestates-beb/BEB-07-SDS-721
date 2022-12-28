@@ -2,6 +2,7 @@ const Web3 = require('web3');
 const axios = require('axios');
 const Nft = require('../schemas/nfts');
 const User = require('../schemas/users');
+const Collection = require('../schemas/collections');
 // TODO: make it receive variables and wrap it for multiple listener
 const GOERLIWEBSOCKET =
   'wss://goerli.infura.io/ws/v3/f09f2f4de3164c8eb1a057b84bae7113';
@@ -434,7 +435,7 @@ const getTokenURIData = async (tokenURI) => {
   }
 };
 
-const updateNft = async (tokenData) => {
+const updateNftDB = async (tokenData) => {
   // 1. 먼저 해당 nft가 db에 존재하는지 확인한다.
   // 2. 있으면 업데이트 한다.
   // 3. 없으면 새로 만든다.
@@ -450,8 +451,24 @@ const updateNft = async (tokenData) => {
   }
 };
 
-const updateUser = async () => {};
-const updateContract = async () => {};
+const updateUserDB = async () => {};
+const updateCollectionDB = async (tokenData) => {
+  const { contractAddress } = tokenData;
+  let collection = await Collection.findOne({ contractAddress });
+  if (!collection) {
+    console.log('collection not found on db, creating');
+    const name = await Contract.methods.name().call();
+    const symbol = await Contract.methods.symbol().call();
+    const owner = await Contract.methods.owner().call();
+    collection = await Collection.create({
+      contractAddress,
+      name,
+      symbol,
+      owner,
+    });
+  }
+  return collection;
+};
 
 module.exports = () => {
   Contract.events.Transfer().on('data', async (event) => {
@@ -472,20 +489,12 @@ module.exports = () => {
     tokenData.owner = to;
     tokenData.creator = sdhAddress; // TODO make variable
 
-    let nfts = await Nft.find({});
-    console.log(nfts);
     // 2. update nft db
-    await updateNft(tokenData);
-    nfts = await Nft.find({});
-    console.log(nfts);
+    await updateCollectionDB(tokenData);
+    await updateNftDB(tokenData);
     // 3. update user db
-    updateUser();
+    await updateUserDB(tokenData);
     // 4. update contract db
-    updateContract();
-    console.log('data set: ');
-    console.log(event);
-    console.log('extracting data ');
-    console.log(event.returnValues);
   });
 };
 

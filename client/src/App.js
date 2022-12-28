@@ -67,10 +67,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/explore" element={<Explore />}></Route>
-          <Route path="/mint" element={<Mint />}></Route>
+          <Route path="/mint" element={<Mint account={account} />}></Route>
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
           <Route path="/details" element={<Details />}></Route>
-
         </Routes>
         <Footer />
       </div>

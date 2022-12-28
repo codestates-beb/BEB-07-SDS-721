@@ -22,27 +22,21 @@ const Explore = () => {
 
       <div className="flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
         <div className="">
-          <CategoryCard category_img={categorySample1} category_name="Art" />
+          <CategoryCard category_img={categorySample1} category_name="Man" />
         </div>
 
         <div className="">
-          <CategoryCard
-            category_img={categorySample2}
-            category_name="Photography"
-          />
+          <CategoryCard category_img={categorySample2} category_name="Woman" />
         </div>
       </div>
 
       <div className="categoryCard flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
         <div className="">
-          <CategoryCard category_img={categorySample3} category_name="Sports" />
+          <CategoryCard category_img={categorySample3} category_name="Dog" />
         </div>
 
         <div className="">
-          <CategoryCard
-            category_img={categorySample4}
-            category_name="Virtual Worlds"
-          />
+          <CategoryCard category_img={categorySample4} category_name="Cat" />
         </div>
       </div>
     </div>

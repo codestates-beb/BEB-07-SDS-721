@@ -150,7 +150,7 @@ const Mint = ({ account }) => {
             <h1 className="mb-2 h-[98px] w-[483px] text-[80px] font-bold">
               Create NFT
             </h1>
-            <p className="h-8 text-xl font-normal">
+            <p className="mx-[5px] h-8 text-xl font-normal">
               Welcome! Enter Your Details And Start Creating.
             </p>
           </div>
@@ -158,24 +158,26 @@ const Mint = ({ account }) => {
           <form className="flex flex-col">
             <input
               placeholder="Name"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={inputChange}
             ></input>
             <input
               placeholder="City"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={cityChange}
             ></input>
             <textarea
               placeholder="Description"
-              className="mb-4 h-[165px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              className="description mb-4 h-[165px] rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={descriptChange}
             ></textarea>
             <button
               onClick={submit}
               className="shadow-black h-[45px] rounded-2xl border-2 bg-blue"
             >
-              <h1 className="font-semibold text-white">Create NFT</h1>
+              <h1 className="font-semibold text-white  drop-shadow-md">
+                Create NFT
+              </h1>
             </button>
           </form>
         </div>

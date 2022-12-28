@@ -37,7 +37,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
           <li className="h-[100%]">
             {account ? (
               <button
-                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-lg bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
                 onClick={disconnectWallet}
               >
                 Log Out

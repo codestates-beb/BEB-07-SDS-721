@@ -9,6 +9,7 @@ import profile_sample from 'img/profile_sample.jpg';
 const Mint = () => {
   const [ipfsHash, setIpfsHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
+  const [nftName, setNftName] = useState('');
 
   const captureFile = (event) => {
     event.preventDefault();
@@ -22,8 +23,8 @@ const Mint = () => {
   };
 
   const uploadIpfs = (buffer) => {
-    const projectId = '2JWdyQN1UEFEdzya3a30jPQVb97';
-    const projectSecret = '36d47b82182e7e1d41db4ee5f9e0ce8d';
+    const projectId = process.env.REACT_APP_PROJECT_ID;
+    const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
     const auth =
       'Basic ' +
       Buffer.from(projectId + ':' + projectSecret).toString('base64');
@@ -49,6 +50,10 @@ const Mint = () => {
     console.log(ipfsHash);
   };
 
+  const inputChange = (e) => {
+    setNftName(e.target.value);
+  };
+
   return (
     <div className="mint">
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
@@ -56,9 +61,9 @@ const Mint = () => {
           <NftCard2
             img_check={imgCheck}
             ipfs_hash={ipfsHash}
-            nft_name="Will be NFT Name"
+            nft_name={nftName ? nftName : 'Will be NFT Name'}
             artist_profile={profile_sample}
-            artist_name="test"
+            artist_name="anonymous"
           />
           {imgCheck ? (
             <></>
@@ -93,6 +98,7 @@ const Mint = () => {
             <input
               placeholder="Name"
               className="mb-4 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-xl"
+              onChange={inputChange}
             ></input>
             <textarea
               placeholder="Description"

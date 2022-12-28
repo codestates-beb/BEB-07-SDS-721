@@ -13,7 +13,10 @@ connect();
 const devRouter = require('./routes/dev');
 const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
-const sdsEventListener = require('./web3/sdsEventListener');
+const {
+  sds721EventListener,
+  womanNftEventListener,
+} = require('./web3/txEventListener');
 
 const app = express();
 app.set('port', process.env.PORT || 5050);
@@ -61,6 +64,6 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), 'is up and listening');
 });
-sdsEventListener();
-
+sds721EventListener();
+womanNftEventListener();
 module.exports = app;

@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const Web3 = require('web3');
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
-const sds721ABI = require('../chainUtils/abi');
+const sds721ABI = require('../chainUtils/sds721ABI');
 
 const { PK, GOERLIURI } = process.env;
 

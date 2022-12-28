@@ -13,7 +13,7 @@ const MyPage = ({ account }) => {
   const [created, setCreate] = useState([]);
 
   useEffect(() => {
-    fetch(`http://snowdelver.iptime.org/users/${account}`)
+    fetch(`${process.env.REACT_APP_SERVER}/users/${account}`)
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
@@ -22,7 +22,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://snowdelver.iptime.org/users/${account}/collected`)
+    fetch(`${process.env.REACT_APP_SERVER}/users/${account}/collected`)
       .then((res) => res.json())
       .then((res) => {
         setCollect([...res]);
@@ -31,7 +31,7 @@ const MyPage = ({ account }) => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://snowdelver.iptime.org/users/${account}/created`)
+    fetch(`${process.env.REACT_APP_SERVER}/users/${account}/created`)
       .then((res) => res.json())
       .then((res) => {
         setCreate([...res]);

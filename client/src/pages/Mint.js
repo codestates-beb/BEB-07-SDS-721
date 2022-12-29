@@ -1,6 +1,8 @@
 import './Mint.css';
 import { useState } from 'react';
+import React from 'react';
 import NftCard2 from 'components/features/NftCard_2';
+import Dropdown from 'components/features/CategoryDropDown';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
 import spinner from 'img/loading.gif';
@@ -8,8 +10,7 @@ import spinner from 'img/loading.gif';
 import profile_sample from 'img/profile_sample.jpg';
 
 import Contract from 'web3-eth-contract';
-import sds721ABI from 'chainUtils/sds721ABI';
-import dogNftABI from 'chainUtils/dogNftABI';
+import marketABI from 'chainUtils/marketNftABI';
 
 const Mint = ({ account, web3 }) => {
   // const projectId = process.env.REACT_APP_PROJECT_ID;
@@ -29,12 +30,14 @@ const Mint = ({ account, web3 }) => {
   });
 
   const [ipfsHash, setIpfsHash] = useState('');
-  const [metaHash, setMetaHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
-  const [city, setCity] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [price, setPrice] = useState(-1);
+  const [category, setCategory] = useState('');
 
   const captureFile = (event) => {
     setLoading(true);
@@ -62,13 +65,17 @@ const Mint = ({ account, web3 }) => {
 
   async function mint(metaUri) {
     try {
-      const abi = dogNftABI;
-      const address = '0x697db94F18759deef144af868Fd657E85738B87D';
+      console.log(metaUri);
+      const abi = marketABI;
+      const address = '0x928f95240c039996F069358B2867903FDaf8afAb';
       Contract.setProvider(web3);
       const contract = new Contract(abi, address);
-      const result = await contract.methods
-        .mintNFT(account, metaUri)
-        .send({ from: account });
+      const result = await contract.methods.createToken(metaUri, price).send({
+        from: account,
+        gasPrice: 6000000000,
+        gas: 2100000,
+        value: 10000000000000000,
+      });
       return result;
     } catch (e) {
       console.log(e);
@@ -80,17 +87,21 @@ const Mint = ({ account, web3 }) => {
     setNftName(e.target.value);
   };
 
-  const cityChange = (e) => {
-    setCity(e.target.value);
-  };
-
   const descriptChange = (e) => {
     setDescription(e.target.value);
   };
 
+  const checkHandler = () => {
+    setChecked(!checked);
+  };
+
+  const priceChange = (e) => {
+    setPrice(e.target.value);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    if (!city || !description || !nftName) {
+    if (!category || !description || !nftName) {
       alert('please write all field!');
       return;
     }
@@ -99,27 +110,25 @@ const Mint = ({ account, web3 }) => {
       setLoading(true);
 
       const data = JSON.stringify({
-        recipient: account,
         name: nftName,
         description: description,
         image: `https://ipfs.io/ipfs/${ipfsHash}`,
         attributes: [
           {
-            trait_type: 'city',
-            value: city,
+            trait_type: 'category',
+            value: category,
           },
         ],
       });
 
-      // console.log(data);
+      console.log(data);
 
       ipfs.files.add(Buffer.from(data), (err, file) => {
         if (err) {
           console.log(err);
         }
-        console.log(file[0].hash);
-        setMetaHash(file[0].hash);
-        mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
+        // console.log(file[0].hash);
+        mint(`https://ipfs.io/ipfs/${file[0].hash}`).then((res) => {
           console.log(res);
           setLoading(false);
         });
@@ -151,14 +160,14 @@ const Mint = ({ account, web3 }) => {
   return (
     <div className="mint">
       <div
-        className={`fixed top-0 z-50 flex ${
+        className={`fixed top-0 flex ${
           isLoading ? '' : 'hidden'
         } h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
       >
         <img className="" src={spinner} alt="no img"></img>
       </div>
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
-        <div className="relative mr-24">
+        <div className="relative mr-24 h-[800px]">
           <NftCard2
             img_check={imgCheck}
             ipfs_hash={ipfsHash}
@@ -185,7 +194,7 @@ const Mint = ({ account, web3 }) => {
             </form>
           )}
         </div>
-        <div className="w-[600px]">
+        <div className="h-[800px] w-[600px]">
           <div className="mb-8">
             <h1 className="mb-2 h-[98px] w-[483px] text-[80px] font-bold">
               Create NFT
@@ -195,16 +204,83 @@ const Mint = ({ account, web3 }) => {
             </p>
           </div>
 
-          <form className="flex flex-col">
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                className="mr-3 mt-3 mb-3 h-7 w-7 rounded-3xl drop-shadow-md"
+                type="checkbox"
+                onChange={checkHandler}
+              />
+              <div className="mr-8">
+                {checked ? (
+                  <input
+                    className="PriceSetter mb-2 w-[205px] rounded-2xl border-2 border-gray-light px-2 py-3 text-center drop-shadow-md"
+                    placeholder="Check To Set a Price"
+                    type="number"
+                    onChange={priceChange}
+                  ></input>
+                ) : (
+                  <input
+                    className="PriceSetter mb-2 w-[205px] rounded-2xl border-2 border-gray-light px-2 py-3 text-center drop-shadow-md"
+                    placeholder="Check To Set a Price"
+                    type="number"
+                    disabled
+                  ></input>
+                )}
+              </div>
+              <div className="mb-2 w-[200px] rounded-2xl border-2 border-gray-light bg-blueLight px-2 py-3 text-center text-white drop-shadow-md">
+                <button
+                  className={dropdownVisibility ? 'hidden' : ''}
+                  onClick={(e) => setDropdownVisibility(!dropdownVisibility)}
+                >
+                  {category ? category : 'Select Category'}
+                </button>
+                <Dropdown visibility={dropdownVisibility}>
+                  <ul className="flex flex-col pl-0 text-left">
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('man');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      man
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('woman');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      woman
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('dog');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      dog
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('cat');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      cat
+                    </button>
+                  </ul>
+                </Dropdown>
+              </div>
+            </div>
             <input
               placeholder="Name"
               className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={inputChange}
-            ></input>
-            <input
-              placeholder="City"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
-              onChange={cityChange}
             ></input>
             <textarea
               placeholder="Description"
@@ -219,7 +295,7 @@ const Mint = ({ account, web3 }) => {
                 Create NFT
               </h1>
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

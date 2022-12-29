@@ -70,7 +70,7 @@ const MyPage = ({ account }) => {
           Collected
         </div>
 
-        <div className="mt-[3rem] grid grid-cols-fill-25 justify-start">
+        <div className="my-[5rem] mt-[3rem] grid grid-cols-fill-25 justify-start gap-y-12">
           {collected.map((nft) => (
             <div
               className=""
@@ -94,7 +94,7 @@ const MyPage = ({ account }) => {
           Created
         </div>
 
-        <div className="mt-[3rem] grid grid-cols-fill-25 justify-start gap-y-12">
+        <div className="my-[5rem] mt-[3rem] grid grid-cols-fill-25 justify-start gap-y-12">
           {created.map((nft) => (
             <div
               className=""

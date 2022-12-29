@@ -21,6 +21,11 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
     }
   };
 
+  const homePageClick = (e) => {
+    e.preventDefault();
+    navigate('/home', { state: { category: 'home' } });
+  };
+
   return (
     <div className="header sticky top-0 z-50 bg-blue">
       <div className="header-inner relative mx-auto h-20 w-5/6">
@@ -42,14 +47,14 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
           <li className="h-[100%]">
             {account ? (
               <button
-                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-white"
                 onClick={disconnectWallet}
               >
                 Log Out
               </button>
             ) : (
               <button
-                className="mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl bg-blue-light hover:cursor-pointer hover:bg-white hover:text-blue-light"
+                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-white"
                 onClick={connectWallet}
               >
                 Log In

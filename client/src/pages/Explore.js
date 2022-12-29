@@ -1,4 +1,5 @@
 import './Explore.css';
+import { useNavigate } from 'react-router-dom';
 
 import CategoryCard from 'components/features/CategoryCard';
 
@@ -8,6 +9,16 @@ import categorySample3 from 'img/category_sample_3.jpg';
 import categorySample4 from 'img/category_sample_4.jpg';
 
 const Explore = () => {
+  const navigate = useNavigate();
+
+  const categoryClick = (category) => {
+    navigate('/explore/category', {
+      state: {
+        category,
+      },
+    });
+  };
+
   return (
     <div className="explore mx-auto pt-[2rem]">
       <div className="text-center">
@@ -21,21 +32,41 @@ const Explore = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
-        <div className="">
+        <div
+          className=""
+          onClick={() => {
+            categoryClick('man');
+          }}
+        >
           <CategoryCard category_img={categorySample1} category_name="Man" />
         </div>
 
-        <div className="">
+        <div
+          className=""
+          onClick={() => {
+            categoryClick('woman');
+          }}
+        >
           <CategoryCard category_img={categorySample2} category_name="Woman" />
         </div>
       </div>
 
       <div className="categoryCard flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
-        <div className="">
+        <div
+          className=""
+          onClick={() => {
+            categoryClick('dog');
+          }}
+        >
           <CategoryCard category_img={categorySample3} category_name="Dog" />
         </div>
 
-        <div className="">
+        <div
+          className=""
+          onClick={() => {
+            categoryClick('cat');
+          }}
+        >
           <CategoryCard category_img={categorySample4} category_name="Cat" />
         </div>
       </div>

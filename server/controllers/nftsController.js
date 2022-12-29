@@ -3,9 +3,7 @@ require('dotenv').config({ path: '../.env' });
 const AWS = require('aws-sdk');
 const Web3 = require('web3');
 const logger = require('../logger');
-const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
-const Collection = require('../schemas/collections');
 const sds721ABI = require('../web3/ABIs/sds721ABI');
 const womanNftABI = require('../web3/ABIs/womanNftABI');
 

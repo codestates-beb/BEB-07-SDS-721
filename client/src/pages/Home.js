@@ -15,7 +15,7 @@ const Home = ({ isHome }) => {
   const navigate = useNavigate();
   const [nfts, setNfts] = useState([]);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [index, setIndex] = useState(6);
+  const [index, setIndex] = useState(8);
   const initialnfts = nfts.slice(0, index);
   // const [home, setHome] = useState(isHome);
 

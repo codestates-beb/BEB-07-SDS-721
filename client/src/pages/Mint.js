@@ -7,8 +7,12 @@ import spinner from 'img/loading.gif';
 
 import profile_sample from 'img/profile_sample.jpg';
 
-const Mint = ({ account }) => {
+import Contract from 'web3-eth-contract';
+import sds721ABI from 'chainUtils/sds721ABI';
+
+const Mint = ({ account, web3 }) => {
   const [ipfsHash, setIpfsHash] = useState('');
+  const [metaHash, setMetaHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
@@ -56,6 +60,20 @@ const Mint = ({ account }) => {
     console.log(ipfsHash);
   };
 
+  async function mint(metaUri) {
+    try {
+      const abi = sds721ABI;
+      const address = '0x16022D988442C70682e3566d09cd67d86e1b79e4';
+      Contract.setProvider(web3);
+      const contract = new Contract(abi, address);
+      const result = await contract.methods.mintNFT(account, metaUri).call();
+      return result;
+    } catch (e) {
+      console.log(e);
+      return e;
+    }
+  }
+
   const inputChange = (e) => {
     setNftName(e.target.value);
   };
@@ -76,7 +94,15 @@ const Mint = ({ account }) => {
     }
 
     try {
-      const data = {
+      setLoading(true);
+
+      const projectId = process.env.REACT_APP_PROJECT_ID;
+      const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
+      const auth =
+        'Basic ' +
+        Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+      const data = JSON.stringify({
         recipient: account,
         name: nftName,
         description: description,
@@ -87,38 +113,52 @@ const Mint = ({ account }) => {
             value: city,
           },
         ],
-      };
+      });
 
-      console.log(JSON.stringify(data));
+      console.log(data);
 
-      const res = await fetch(
-        `${process.env.REACT_APP_SERVER}/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4`,
-        {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          redirect: 'follow',
-          referrerPolicy: 'no-referrer',
-          body: JSON.stringify(data),
+      const ipfs = IpfsAPI({
+        host: 'ipfs.infura.io',
+        port: 5001,
+        protocol: 'https',
+        headers: {
+          authorization: auth,
         },
-      );
+      });
 
-      console.log(res);
+      ipfs.files.add(Buffer.from(data), (err, file) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(file[0].hash);
+        setMetaHash(file[0].hash);
+        mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
+          console.log(res);
+          setLoading(false);
+        });
+      });
 
-      // console.log('start post');
-      // const res = await axios.post(
-      //   'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
-      //   JSON.stringify(data),
+      // const res = await fetch(
+      //   `${process.env.REACT_APP_SERVER}/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4`,
       //   {
-      //     headers: { 'Content-Type': `application/json` },
+      //     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      //     mode: 'cors', // no-cors, *cors, same-origin
+      //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      //     credentials: 'same-origin', // include, *same-origin, omit
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     redirect: 'follow',
+      //     referrerPolicy: 'no-referrer',
+      //     body: JSON.stringify(data),
       //   },
       // );
-      // console.log(res);
-    } catch {}
+
+      // setLoading(false);
+    } catch {
+      alert('error!');
+      setLoading(false);
+    }
   };
 
   return (

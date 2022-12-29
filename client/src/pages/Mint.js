@@ -8,7 +8,6 @@ import spinner from 'img/loading.gif';
 import profile_sample from 'img/profile_sample.jpg';
 
 import Contract from 'web3-eth-contract';
-import sds721ABI from 'chainUtils/sds721ABI';
 import dogNftABI from 'chainUtils/dogNftABI';
 
 const Mint = ({ account, web3 }) => {
@@ -29,7 +28,6 @@ const Mint = ({ account, web3 }) => {
   });
 
   const [ipfsHash, setIpfsHash] = useState('');
-  const [metaHash, setMetaHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
@@ -62,6 +60,7 @@ const Mint = ({ account, web3 }) => {
 
   async function mint(metaUri) {
     try {
+      console.log(metaUri);
       const abi = dogNftABI;
       const address = '0x697db94F18759deef144af868Fd657E85738B87D';
       Contract.setProvider(web3);
@@ -117,9 +116,8 @@ const Mint = ({ account, web3 }) => {
         if (err) {
           console.log(err);
         }
-        console.log(file[0].hash);
-        setMetaHash(file[0].hash);
-        mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
+        // console.log(file[0].hash);
+        mint(`https://ipfs.io/ipfs/${file[0].hash}`).then((res) => {
           console.log(res);
           setLoading(false);
         });

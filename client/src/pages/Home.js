@@ -1,5 +1,6 @@
 import './Home.css';
 import NftCard from 'components/features/NftCard';
+import ScrollButton from 'components/features/ScrollButton';
 import { useState, useEffect } from 'react';
 
 import profile_sample from 'img/profile_sample.jpg';
@@ -64,6 +65,9 @@ const Home = () => {
             Load More
           </button>
         )}
+      </div>
+      <div className="fixed bottom-11 right-11">
+        <ScrollButton />
       </div>
     </div>
   );

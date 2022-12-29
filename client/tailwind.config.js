@@ -22,7 +22,7 @@ module.exports = {
       gray: '#858584',
       'gray-light': '#d3dce6',
       white: '#ffffff',
-      'blue-light': '#1f3c88',
+      blueLight: '#1f3c88',
       'blue-footer': '#5893d4',
     },
   },

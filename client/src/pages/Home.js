@@ -2,10 +2,12 @@ import './Home.css';
 import NftCard from 'components/features/NftCard';
 import ScrollButton from 'components/features/ScrollButton';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [nfts, setNfts] = useState([]);
   const [isCompleted, setIsCompleted] = useState(false);
   const [index, setIndex] = useState(6);
@@ -17,18 +19,22 @@ const Home = () => {
       .then((res) => res.json())
       .then((res) => {
         setNfts([...res]);
-        console.log(res);
+        // console.log(res);
       });
   }, []);
 
   const loadMore = () => {
     setIndex(index + 4);
-    console.log(index);
+    // console.log(index);
     if (index >= nfts.length) {
       setIsCompleted(true);
     } else {
       setIsCompleted(false);
     }
+  };
+
+  const cardClick = (id, address) => {
+    navigate('/details', { state: { id, address } });
   };
 
   return (
@@ -40,7 +46,13 @@ const Home = () => {
         <div className="grid grid-cols-fill-25 justify-center gap-y-12">
           {initialnfts.map((nft) => {
             return (
-              <div className="mx-auto" key={nft.transactionHash}>
+              <div
+                className="mx-auto"
+                key={nft.transactionHash}
+                onClick={() => {
+                  cardClick(nft.tokenId, nft.contractAddress);
+                }}
+              >
                 <NftCard
                   nft_img={nft.image}
                   nft_name={nft.name}

@@ -1,28 +1,42 @@
 import './Details.css';
 
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import NftCard from 'components/features/NftCard';
 
 import profile_sample from 'img/profile_sample.jpg';
 
-const Details = () => {
+const Details = ({ account }) => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  const id = location.state.id;
+  const address = location.state.address;
   const [nft, setDetailNFT] = useState([]);
+  const [owner, setOwner] = useState(true);
 
   useEffect(() => {
-    fetch(
-      'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1',
-    )
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  useEffect(() => {
+    fetch(`http://3.38.208.33/nfts/${address}/${id}`)
       .then((res) => res.json())
       .then((res) => {
         setDetailNFT(res);
         console.log(res);
+        console.log(account.toUpperCase);
+        console.log(res.owner.toUpperCase);
+        if (account.toUpperCase() === res.owner.toUpperCase()) {
+          setOwner(false);
+        }
       });
   }, []);
 
   return (
-    <div className="details flex min-h-screen gap-4">
-      <div className="sidebar w-[400px] shrink-0 flex-col">
+    <div className="details flex h-screen gap-4">
+      <div className="sidebar ml-[7rem] w-[400px] shrink-0 flex-col">
         <div className="m-[50px]">
           <NftCard
             nft_img={nft.image}
@@ -32,13 +46,17 @@ const Details = () => {
             price="1.63"
           />
         </div>
-        <input
-          className="shadow-black mx-[50px] my-[10px] h-[45px] w-[300px] rounded-2xl border-2 font-semibold"
-          placeholder="                  Enter your NFT price"
-        ></input>
-        <button className="shadow-black mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue">
-          <h1 className="font-semibold text-white">Set a price</h1>
-        </button>
+        <div>
+          {owner ? (
+            <button className="mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue font-semibold text-white shadow-black transition-all hover:scale-105 hover:cursor-pointer">
+              Buy This NFT !
+            </button>
+          ) : (
+            <button className="hidden font-semibold text-black">
+              You are not owner!!!!!!!!!!!!!
+            </button>
+          )}
+        </div>
       </div>
       <div className="description m-[50px] grow">
         <div className="mb-[5px] text-7xl">{nft.name}</div>

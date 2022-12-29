@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '../.env' });
 const Web3 = require('web3');
+const logger = require('../logger');
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 const { NETWORK, ADDRESS, PK, MNEMONIC, GOERLIURI, GOERLIWEBSOCKET } =
@@ -15,24 +16,24 @@ const web3Socket = new Web3(
 module.exports = {
   getTxInfo: async (txHash) => {
     const tx = await web3.eth.getTransaction(txHash);
-    console.log(tx);
+    logger.info(tx);
   },
 
   getBlockInfo: async (blockNum) => {
     const blockInfo = await web3.eth.getBlock(blockNum);
-    console.log(blockInfo);
+    logger.info(blockInfo);
   },
 
   getBalanceOf: async (address) => {
     const balance = await web3.eth.getBalance(address);
-    console.log(balance);
+    logger.info(balance);
   },
 
   blockListener: async () => {
     const blockSubscription = web3Socket.eth.subscribe(
       'newBlockHeaders',
       (err, blockHeader) => {
-        console.log(blockHeader);
+        logger.info(blockHeader);
       },
     );
   },
@@ -41,7 +42,7 @@ module.exports = {
     const txSubscription = web3Socket.eth.subscribe(
       'pendingTransactions',
       (err, txHash) => {
-        console.log(txHash);
+        logger.info(txHash);
       },
     );
   },
@@ -49,15 +50,15 @@ module.exports = {
   // not working, may be I should specify events from abi
   contractListener: async (abi, ca, from) => {
     const Contract = new web3Socket.eth.Contract(abi, ca);
-    // console.log(contract.methods.say);
+    // logger.info(contract.methods.say);
     Contract.events
-      .say({}, (err, event) => console.log(err))
+      .say({}, (err, event) => logger.info(err))
       .on('data', (event) => {
-        console.log('data set: ');
-        console.log(event);
+        logger.info('data set: ');
+        logger.info(event);
 
-        console.log('extracting required data: ');
-        console.log(event.returnValues);
+        logger.info('extracting required data: ');
+        logger.info(event.returnValues);
       });
   },
 };

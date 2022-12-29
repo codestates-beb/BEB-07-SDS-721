@@ -10,8 +10,8 @@ const {
 
 const router = express.Router();
 
-router.post('/login', login);
-router.get('/my', myInfo);
+// router.post('/login', login);
+// router.get('/my', myInfo);
 router.get('/:account', userInfo);
 router.get('/:account/nfts', allUserNfts);
 router.get('/:account/created', createdUserNfts);

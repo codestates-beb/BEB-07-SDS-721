@@ -115,7 +115,7 @@ const Mint = ({ account, web3 }) => {
         if (err) {
           console.log(err);
         }
-        // console.log(file[0].hash);
+        console.log(file[0].hash);
         setMetaHash(file[0].hash);
         mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
           console.log(res);

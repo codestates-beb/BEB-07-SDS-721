@@ -14,7 +14,7 @@ const Details = ({ account }) => {
   const id = location.state.id;
   const address = location.state.address;
   const [nft, setDetailNFT] = useState([]);
-  const [owner, setOwner] = useState(false);
+  const [owner, setOwner] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,9 +26,10 @@ const Details = ({ account }) => {
       .then((res) => {
         setDetailNFT(res);
         console.log(res);
-        console.log(account);
-        if (account !== res.owner) {
-          setOwner(true);
+        console.log(account.toUpperCase);
+        console.log(res.owner.toUpperCase);
+        if (account.toUpperCase() === res.owner.toUpperCase()) {
+          setOwner(false);
         }
       });
   }, []);

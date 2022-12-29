@@ -19,7 +19,7 @@ const Home = () => {
       .then((res) => res.json())
       .then((res) => {
         setNfts([...res]);
-        // console.log(res);
+        console.log(res);
       });
   }, []);
 

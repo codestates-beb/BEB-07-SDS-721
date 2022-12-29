@@ -1,4 +1,5 @@
 import './Explore.css';
+// import { useNavigate } from 'react-router-dom';
 
 import CategoryCard from 'components/features/CategoryCard';
 
@@ -8,6 +9,8 @@ import categorySample3 from 'img/category_sample_3.jpg';
 import categorySample4 from 'img/category_sample_4.jpg';
 
 const Explore = () => {
+  // const navigate = useNavigate();
+
   return (
     <div className="explore mx-auto pt-[2rem]">
       <div className="text-center">

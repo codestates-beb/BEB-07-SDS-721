@@ -33,10 +33,10 @@ const Details = () => {
           />
         </div>
         <input
-          className="shadow-black mx-[50px] my-[10px] h-[45px] w-[300px] rounded-2xl border-2 font-semibold"
+          className="mx-[50px] my-[10px] h-[45px] w-[300px] rounded-2xl border-2 font-semibold shadow-black"
           placeholder="                  Enter your NFT price"
         ></input>
-        <button className="shadow-black mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue">
+        <button className="mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue shadow-black">
           <h1 className="font-semibold text-white">Set a price</h1>
         </button>
       </div>

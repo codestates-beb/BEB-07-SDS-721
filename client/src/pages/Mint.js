@@ -1,9 +1,9 @@
 import './Mint.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NftCard2 from 'components/features/NftCard_2';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
-import axios from 'axios';
+import spinner from 'img/loading.gif';
 
 import profile_sample from 'img/profile_sample.jpg';
 
@@ -13,8 +13,10 @@ const Mint = ({ account }) => {
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   const captureFile = (event) => {
+    setLoading(true);
     event.preventDefault();
     const file = event.target.files[0];
     let reader = new window.FileReader();
@@ -48,6 +50,7 @@ const Mint = ({ account }) => {
       console.log(file[0].hash);
       setIpfsHash(file[0].hash);
       setImgCheck(true);
+      setLoading(false);
     });
 
     console.log(ipfsHash);
@@ -67,7 +70,10 @@ const Mint = ({ account }) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!city || !description || !nftName) alert('please write all field!');
+    if (!city || !description || !nftName) {
+      alert('please write all field!');
+      return;
+    }
 
     try {
       const data = {
@@ -117,6 +123,13 @@ const Mint = ({ account }) => {
 
   return (
     <div className="mint">
+      <div
+        className={`fixed top-0 z-50 flex ${
+          isLoading ? '' : 'hidden'
+        } h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
+      >
+        <img className="" src={spinner} alt="no img"></img>
+      </div>
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
         <div className="relative mr-24">
           <NftCard2
@@ -173,7 +186,7 @@ const Mint = ({ account }) => {
             ></textarea>
             <button
               onClick={submit}
-              className="shadow-black h-[45px] rounded-2xl border-2 bg-blue"
+              className="h-[45px] rounded-2xl border-2 bg-blue shadow-black"
             >
               <h1 className="font-semibold text-white  drop-shadow-md">
                 Create NFT

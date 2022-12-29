@@ -11,7 +11,7 @@ const Details = () => {
 
   useEffect(() => {
     fetch(
-      'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1',
+      'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1',
     )
       .then((res) => res.json())
       .then((res) => {

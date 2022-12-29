@@ -6,10 +6,12 @@ const morgan = require('morgan');
 const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const logger = require('./logger');
 
 const connect = require('./schemas');
 
 connect();
+
 const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
 const { MarketNftEventListener } = require('./web3/txEventListener');
@@ -63,7 +65,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(app.get('port'), () => {
-  console.log(app.get('port'), 'is up and listening');
+  logger.info(app.get('port'), 'is up and listening');
 });
 
 MarketNftEventListener();

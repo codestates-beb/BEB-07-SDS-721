@@ -4,6 +4,7 @@
 const Web3 = require('web3');
 const axios = require('axios');
 
+const logger = require('../logger');
 const Nft = require('../schemas/nfts');
 const User = require('../schemas/users');
 const Transaction = require('../schemas/transactions');
@@ -23,7 +24,7 @@ const getTxData = async (txHash) => {
 };
 
 const getTokenURIData = async (tokenURI) => {
-  console.log({ tokenURI });
+  logger.info({ tokenURI });
   const result = await axios.get(tokenURI);
   return result.data;
 };
@@ -61,10 +62,10 @@ const updateNftDB = async (tokenData) => {
   const { contractAddress, tokenId, owner } = tokenData;
   let nft = await Nft.findOne({ contractAddress, tokenId });
   if (!nft) {
-    console.log('Sale TX no such nft found');
+    logger.info('Sale TX no such nft found');
     return null;
   }
-  console.log('Sale TX nft found, update existing one');
+  logger.info('Sale TX nft found, update existing one');
   const newOwner = owner;
   const oldOwner = nft.owner;
   tokenData.creator = nft.creator;
@@ -85,7 +86,7 @@ const updateCollectionDB = async (Contract, tokenData) => {
   const { contractAddress } = tokenData;
   let collection = await Collection.findOne({ contractAddress });
   if (!collection) {
-    console.log('collection not found on db, creating');
+    logger.info('collection not found on db, creating');
     const name = await Contract.methods.name().call();
     const symbol = await Contract.methods.symbol().call();
 
@@ -114,7 +115,7 @@ module.exports = {
         const { transactionHash, address, returnValues } = event;
         const isExist = await Transaction.findOne({ transactionHash });
         if (isExist) {
-          console.log(`TransactionHash : ${transactionHash} Already processed`);
+          logger.info(`TransactionHash : ${transactionHash} Already processed`);
           return;
         }
         await Transaction.create({ transactionHash });
@@ -125,13 +126,13 @@ module.exports = {
 
         const txData = await getTxData(transactionHash);
         const tokenData = await getTokenURIData(tokenURI);
-        // console.log({ event });
-        // console.log({ txData });
+        // logger.info({ event });
+        // logger.info({ txData });
 
         const queryTokenData = await Contract.methods
           .getListedTokenForId(tokenId)
           .call();
-        console.log(queryTokenData);
+        logger.info(queryTokenData);
         console.assert(
           tokenId === queryTokenData[0],
           'tokenId and data is not matching',
@@ -153,7 +154,7 @@ module.exports = {
           tokenData.owner = txData.from;
           tokenData.creator = null;
         }
-        console.log({ tokenData });
+        logger.info({ tokenData });
 
         await updateCollectionDB(Contract, tokenData);
         await updateUserDB(tokenData.owner);
@@ -163,7 +164,7 @@ module.exports = {
         await updateNftDB(tokenData);
       });
     } catch (err) {
-      console.error(err);
+      logger.error(err);
     }
   },
 };

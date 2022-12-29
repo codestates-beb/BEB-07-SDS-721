@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('../logger');
 
 const connect = () => {
   if (process.env.SERVER_ENV !== 'production') {
@@ -15,19 +16,19 @@ const connect = () => {
     },
     (err) => {
       if (err) {
-        console.log('MongoDB connection Fail', err);
+        logger.error('MongoDB connection Fail', err);
       } else {
-        console.log('MongoDB connection successful');
+        logger.info('MongoDB connection successful');
       }
     },
   );
 
   mongoose.connection.on('error', (err) => {
-    console.error('MongoDB connection Error', err);
+    logger.error('MongoDB connection Error', err);
   });
 
   mongoose.connection.on('disconnect', () => {
-    console.error('MongoDB disconnected. Try connection');
+    logger.error('MongoDB disconnected. Try connection');
     connect();
   });
 };

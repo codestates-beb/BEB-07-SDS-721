@@ -46,7 +46,7 @@ module.exports = {
       }
       return res.status(200).json(foundNft);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -66,7 +66,7 @@ module.exports = {
       }
       return res.status(200).json(foundNft);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -81,7 +81,7 @@ module.exports = {
       }
       return res.status(200).json(foundNft);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -156,7 +156,7 @@ module.exports = {
       // 6. 결과를 반환한다.
       return res.status(200).json({ sentTx });
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },

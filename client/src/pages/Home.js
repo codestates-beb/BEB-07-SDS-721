@@ -20,14 +20,13 @@ const Home = ({ isHome }) => {
   // const [home, setHome] = useState(isHome);
 
   useEffect(() => {
-    console.log('test!');
     //getData
     fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
         if (isHome) {
           setNfts([...res]);
-          console.log(res);
+          // console.log(res);
         } else {
           setNfts([
             ...res.filter((el) => {
@@ -66,7 +65,7 @@ const Home = ({ isHome }) => {
             return (
               <div
                 className="mx-auto"
-                key={nft.transactionHash}
+                key={nft._id}
                 onClick={() => {
                   cardClick(nft.tokenId, nft.contractAddress);
                 }}

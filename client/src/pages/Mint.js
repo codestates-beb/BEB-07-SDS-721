@@ -65,7 +65,7 @@ const Mint = ({ account, web3 }) => {
 
   async function mint(metaUri) {
     try {
-      console.log(metaUri);
+      // console.log(metaUri);
       const abi = marketABI;
       const address = '0x928f95240c039996F069358B2867903FDaf8afAb';
       Contract.setProvider(web3);
@@ -121,7 +121,7 @@ const Mint = ({ account, web3 }) => {
         ],
       });
 
-      console.log(data);
+      // console.log(data);
 
       ipfs.files.add(Buffer.from(data), (err, file) => {
         if (err) {

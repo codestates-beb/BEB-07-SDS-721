@@ -74,7 +74,7 @@ const MyPage = ({ account }) => {
           {collected.map((nft) => (
             <div
               className=""
-              key={nft.transactionHash}
+              key={nft._id}
               onClick={() => {
                 cardClick(nft.tokenId, nft.contractAddress);
               }}
@@ -98,7 +98,7 @@ const MyPage = ({ account }) => {
           {created.map((nft) => (
             <div
               className=""
-              key={nft.transactionHash}
+              key={nft._id}
               onClick={() => {
                 cardClick(nft.tokenId, nft.contractAddress);
               }}

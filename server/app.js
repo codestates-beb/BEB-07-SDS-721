@@ -16,6 +16,7 @@ const usersRouter = require('./routes/users');
 const {
   sds721EventListener,
   womanNftEventListener,
+  dogNftEventListener,
 } = require('./web3/txEventListener');
 
 const app = express();
@@ -66,4 +67,5 @@ app.listen(app.get('port'), () => {
 });
 sds721EventListener();
 womanNftEventListener();
+dogNftEventListener();
 module.exports = app;

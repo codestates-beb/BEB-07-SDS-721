@@ -6,9 +6,11 @@ const User = require('../schemas/users');
 const Collection = require('../schemas/collections');
 const sds721ABI = require('../chainUtils/sds721ABI');
 const womanNftABI = require('../chainUtils/womanNftABI');
+const dogNftABI = require('../chainUtils/dogNftABI');
 
 const { SDS721CA } = process.env;
 const { WOMANNFTCA } = process.env;
+const { DOGNFTCA } = process.env;
 const GOERLIWEBSOCKET =
   'wss://goerli.infura.io/ws/v3/f09f2f4de3164c8eb1a057b84bae7113';
 
@@ -19,12 +21,19 @@ const kwonAddress = '0x5573A5eD2211BB01F924Ac9303CaEa06883865c1';
 const web3 = new Web3(new Web3.providers.WebsocketProvider(GOERLIWEBSOCKET));
 
 const getTokenURIData = async (tokenURI) => {
+  console.log('getTokendata called');
   try {
     const result = await axios.get(tokenURI);
-    console.log(result.data);
+    console.log('getTokendata get request result', result);
+    if (!result?.data) {
+      console.log('result data is undefiend');
+      return getTokenURIData(tokenURI);
+    }
     return result.data;
   } catch (err) {
-    return null;
+    console.log('getTokenUriData error thrown');
+    console.error(err);
+    return getTokenURIData(tokenURI);
   }
 };
 
@@ -79,47 +88,83 @@ const updateCollectionDB = async (Contract, tokenData) => {
 
 module.exports = {
   sds721EventListener: () => {
-    const Contract = new web3.eth.Contract(sds721ABI, SDS721CA);
-    Contract.events.Transfer().on('data', async (event) => {
-      const { transactionHash, address, returnValues } = event;
-      const { tokenId, to } = returnValues;
-      // get metadata of minted nft with web3 call
-      const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+    try {
+      const Contract = new web3.eth.Contract(sds721ABI, SDS721CA);
+      Contract.events.Transfer().on('data', async (event) => {
+        const { transactionHash, address, returnValues } = event;
+        const { tokenId, to } = returnValues;
+        // get metadata of minted nft with web3 call
+        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
 
-      const tokenData = await getTokenURIData(tokenURI);
-      tokenData.contractAddress = address;
-      tokenData.tokenId = tokenId;
-      tokenData.transactionHash = transactionHash;
-      tokenData.tokenURI = tokenURI;
-      tokenData.owner = to;
-      tokenData.creator = sdhAddress; // TODO make variable
+        const tokenData = await getTokenURIData(tokenURI);
+        tokenData.contractAddress = address;
+        tokenData.tokenId = tokenId;
+        tokenData.transactionHash = transactionHash;
+        tokenData.tokenURI = tokenURI;
+        tokenData.owner = to;
+        tokenData.creator = sdhAddress; // TODO make variable
 
-      await updateCollectionDB(Contract, tokenData);
-      await updateUserDB(tokenData.owner);
-      await updateUserDB(tokenData.creator);
-      await updateNftDB(tokenData);
-    });
+        await updateCollectionDB(Contract, tokenData);
+        await updateUserDB(tokenData.owner);
+        await updateUserDB(tokenData.creator);
+        await updateNftDB(tokenData);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   },
   womanNftEventListener: () => {
-    const Contract = new web3.eth.Contract(womanNftABI, WOMANNFTCA);
-    Contract.events.Transfer().on('data', async (event) => {
-      const { transactionHash, address, returnValues } = event;
-      const { tokenId, to } = returnValues;
-      // get metadata of minted nft with web3 call
-      const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+    try {
+      const Contract = new web3.eth.Contract(womanNftABI, WOMANNFTCA);
+      Contract.events.Transfer().on('data', async (event) => {
+        const { transactionHash, address, returnValues } = event;
+        const { tokenId, to } = returnValues;
+        // get metadata of minted nft with web3 call
+        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
 
-      const tokenData = await getTokenURIData(tokenURI);
-      tokenData.contractAddress = address;
-      tokenData.tokenId = tokenId;
-      tokenData.transactionHash = transactionHash;
-      tokenData.tokenURI = tokenURI;
-      tokenData.owner = to;
-      tokenData.creator = kwonAddress; // TODO make variable
+        const tokenData = await getTokenURIData(tokenURI);
+        tokenData.contractAddress = address;
+        tokenData.tokenId = tokenId;
+        tokenData.transactionHash = transactionHash;
+        tokenData.tokenURI = tokenURI;
+        tokenData.owner = to;
+        tokenData.creator = kwonAddress; // TODO make variable
 
-      await updateCollectionDB(Contract, tokenData);
-      await updateUserDB(tokenData.owner);
-      await updateUserDB(tokenData.creator);
-      await updateNftDB(tokenData);
-    });
+        await updateCollectionDB(Contract, tokenData);
+        await updateUserDB(tokenData.owner);
+        await updateUserDB(tokenData.creator);
+        await updateNftDB(tokenData);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  dogNftEventListener: () => {
+    try {
+      const Contract = new web3.eth.Contract(dogNftABI, DOGNFTCA);
+      Contract.events.Transfer().on('data', async (event) => {
+        const { transactionHash, address, returnValues } = event;
+        const { tokenId, to } = returnValues;
+        // get metadata of minted nft with web3 call
+        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+
+        const tokenData = await getTokenURIData(tokenURI);
+        console.log('event', event);
+        console.log('TokenData', tokenData);
+        tokenData.contractAddress = address;
+        tokenData.tokenId = tokenId;
+        tokenData.transactionHash = transactionHash;
+        tokenData.tokenURI = tokenURI;
+        tokenData.owner = to;
+        tokenData.creator = kwonAddress; // TODO make variable
+
+        await updateCollectionDB(Contract, tokenData);
+        await updateUserDB(tokenData.owner);
+        await updateUserDB(tokenData.creator);
+        await updateNftDB(tokenData);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   },
 };

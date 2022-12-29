@@ -1,27 +1,35 @@
 import './Details.css';
 
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import NftCard from 'components/features/NftCard';
 
 import profile_sample from 'img/profile_sample.jpg';
 
 const Details = () => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  const id = location.state.id;
+  const address = location.state.address;
   const [nft, setDetailNFT] = useState([]);
 
   useEffect(() => {
-    fetch(
-      'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1',
-    )
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  useEffect(() => {
+    fetch(`http://3.38.208.33/nfts/${address}/${id}`)
       .then((res) => res.json())
       .then((res) => {
         setDetailNFT(res);
-        console.log(res);
+        // console.log(res);
       });
   }, []);
 
   return (
-    <div className="details flex min-h-screen gap-4">
+    <div className="details flex gap-4">
       <div className="sidebar w-[400px] shrink-0 flex-col">
         <div className="m-[50px]">
           <NftCard

@@ -12,8 +12,10 @@ import sds721ABI from 'chainUtils/sds721ABI';
 import dogNftABI from 'chainUtils/dogNftABI';
 
 const Mint = ({ account, web3 }) => {
-  const projectId = process.env.REACT_APP_PROJECT_ID;
-  const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
+  // const projectId = process.env.REACT_APP_PROJECT_ID;
+  // const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
+  const projectId = '2JWdyQN1UEFEdzya3a30jPQVb97';
+  const projectSecret = '36d47b82182e7e1d41db4ee5f9e0ce8d';
   const auth =
     'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 

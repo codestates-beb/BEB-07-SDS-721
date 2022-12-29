@@ -27,7 +27,7 @@ const Details = ({ account }) => {
         setDetailNFT(res);
         console.log(res);
         console.log(account);
-        if (account === res.owner) {
+        if (account !== res.owner) {
           setOwner(true);
         }
       });

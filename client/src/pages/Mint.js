@@ -92,7 +92,7 @@ const Mint = ({ account }) => {
       console.log(JSON.stringify(data));
 
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER}/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4`,
+        'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
         {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin
@@ -111,7 +111,7 @@ const Mint = ({ account }) => {
 
       // console.log('start post');
       // const res = await axios.post(
-      //   'http://snowdelver.iptime.org/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
+      //   'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
       //   JSON.stringify(data),
       //   {
       //     headers: { 'Content-Type': `application/json` },

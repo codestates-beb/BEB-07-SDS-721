@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 const Web3 = require('web3');
@@ -7,19 +8,9 @@ const Nft = require('../schemas/nfts');
 const User = require('../schemas/users');
 const Transaction = require('../schemas/transactions');
 const Collection = require('../schemas/collections');
-const sds721ABI = require('../chainUtils/sds721ABI');
-const womanNftABI = require('../chainUtils/womanNftABI');
-const dogNftABI = require('../chainUtils/dogNftABI');
-const marketV2ABI = require('../chainUtils/marketV2ABI');
+const marketV2ABI = require('./ABIs/marketV2ABI');
 
-const {
-  SDS721CA,
-  WOMANNFTCA,
-  DOGNFTCA,
-  MARKETV2CA,
-  GOERLIWEBSOCKET,
-  GOERLIURI,
-} = process.env;
+const { MARKETV2CA, GOERLIWEBSOCKET, GOERLIURI } = process.env;
 
 const web3Socket = new Web3(
   new Web3.providers.WebsocketProvider(GOERLIWEBSOCKET),
@@ -44,9 +35,6 @@ const updateUserDB = async (account) => {
       upsert: true,
     },
   );
-  // if (!user) {
-  //   user = await User.create({ account });
-  // }
   return user;
 };
 
@@ -55,19 +43,11 @@ const updateNftDB = async (tokenData) => {
     const { contractAddress, tokenId, creator, owner } = tokenData;
     const nft = await Nft.findOneAndUpdate(
       { contractAddress, tokenId },
-      { tokenData },
+      tokenData,
       {
         upsert: true,
       },
-    ); // TODO: fix to findOneAndUpdate Since logicall NFT must exist on db
-    // console.log('MINT tx is nft found?', nft);
-    // if (!nft) {
-    //   console.log('MINT tx no such nft found');
-    //   nft = await Nft.create(tokenData);
-    // } else {
-    //   console.log('MINT tx nft found, update existing one');
-    //   nft.updateOne({ tokenData }); // TODO: potential bug point, NOT FIXED.
-    // }
+    );
     await User.updateOne(
       { account: creator },
       { $addToSet: { created: nft._id } },
@@ -79,7 +59,7 @@ const updateNftDB = async (tokenData) => {
     return nft;
   }
   const { contractAddress, tokenId, owner } = tokenData;
-  const nft = await Nft.findOne({ contractAddress, tokenId });
+  let nft = await Nft.findOne({ contractAddress, tokenId });
   if (!nft) {
     console.log('Sale TX no such nft found');
     return null;
@@ -87,7 +67,8 @@ const updateNftDB = async (tokenData) => {
   console.log('Sale TX nft found, update existing one');
   const newOwner = owner;
   const oldOwner = nft.owner;
-  nft.updateOne({ tokenData }); // TODO: potential bug point, NOT FIXED.
+  tokenData.creator = nft.creator;
+  nft = await Nft.findOneAndUpdate({ contractAddress, tokenId }, tokenData);
 
   await User.updateOne(
     { account: oldOwner },
@@ -126,93 +107,7 @@ const updateCollectionDB = async (Contract, tokenData) => {
 };
 
 module.exports = {
-  sds721EventListener: () => {
-    try {
-      const Contract = new web3Socket.eth.Contract(sds721ABI, SDS721CA);
-      Contract.events.Transfer().on('data', async (event) => {
-        const { transactionHash, address, returnValues } = event;
-        const { tokenId, to } = returnValues;
-        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
-
-        const txData = await getTxData(transactionHash);
-        const tokenData = await getTokenURIData(tokenURI);
-
-        tokenData.contractAddress = address;
-        tokenData.tokenId = tokenId;
-        tokenData.transactionHash = transactionHash;
-        tokenData.tokenURI = tokenURI;
-        tokenData.owner = to;
-        tokenData.creator = txData.from; // TODO make variable
-
-        await updateCollectionDB(Contract, tokenData);
-        await updateUserDB(tokenData.owner);
-        await updateUserDB(tokenData.creator);
-        await updateNftDB(tokenData);
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  },
-  womanNftEventListener: () => {
-    try {
-      const Contract = new web3Socket.eth.Contract(womanNftABI, WOMANNFTCA);
-      Contract.events.Transfer().on('data', async (event) => {
-        const { transactionHash, address, returnValues } = event;
-        const { tokenId, to } = returnValues;
-        // get metadata of minted nft with web3 call
-        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
-
-        const txData = await getTxData(transactionHash);
-        const tokenData = await getTokenURIData(tokenURI);
-
-        tokenData.contractAddress = address;
-        tokenData.tokenId = tokenId;
-        tokenData.transactionHash = transactionHash;
-        tokenData.tokenURI = tokenURI;
-        tokenData.owner = to;
-        tokenData.creator = txData.from; // TODO make variable
-
-        await updateCollectionDB(Contract, tokenData);
-        await updateUserDB(tokenData.owner);
-        await updateUserDB(tokenData.creator);
-        await updateNftDB(tokenData);
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  },
-  dogNftEventListener: () => {
-    try {
-      const Contract = new web3Socket.eth.Contract(dogNftABI, DOGNFTCA);
-      Contract.events.Transfer().on('data', async (event) => {
-        const { transactionHash, address, returnValues } = event;
-        const { tokenId, to } = returnValues;
-        // get metadata of minted nft with web3 call
-        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
-
-        const txData = await getTxData(transactionHash);
-        const tokenData = await getTokenURIData(tokenURI);
-        console.log({ txData });
-        console.log({ tokenData });
-        tokenData.contractAddress = address;
-        tokenData.tokenId = tokenId;
-        tokenData.transactionHash = transactionHash;
-        tokenData.tokenURI = tokenURI;
-        tokenData.owner = to;
-        tokenData.creator = txData.from; // TODO make variable
-
-        await updateCollectionDB(Contract, tokenData);
-        await updateUserDB(tokenData.owner);
-        await updateUserDB(tokenData.creator);
-        await updateNftDB(tokenData);
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  },
   MarketNftEventListener: () => {
-    // need to parse data differently
-    // need to consider data pingpongs
     try {
       const Contract = new web3Socket.eth.Contract(marketV2ABI, MARKETV2CA);
       Contract.events.Transfer().on('data', async (event) => {

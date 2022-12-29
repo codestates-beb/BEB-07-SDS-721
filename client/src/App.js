@@ -67,7 +67,11 @@ function App() {
           account={account}
         />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
+          <Route path="/" element={<Home isHome={true} />}></Route>
+          <Route
+            path="/explore/category"
+            element={<Home isHome={false} />}
+          ></Route>
           <Route path="/explore" element={<Explore />}></Route>
           <Route
             path="/mint"

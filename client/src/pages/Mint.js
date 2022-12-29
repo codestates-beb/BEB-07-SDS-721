@@ -1,6 +1,8 @@
 import './Mint.css';
 import { useState } from 'react';
+import React from 'react';
 import NftCard2 from 'components/features/NftCard_2';
+import Dropdown from 'components/features/CategoryDropDown';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
 import spinner from 'img/loading.gif';
@@ -35,6 +37,8 @@ const Mint = ({ account, web3 }) => {
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const captureFile = (event) => {
     setLoading(true);
@@ -86,6 +90,10 @@ const Mint = ({ account, web3 }) => {
 
   const descriptChange = (e) => {
     setDescription(e.target.value);
+  };
+
+  const checkHandler = () => {
+    setChecked(!checked);
   };
 
   const submit = async (e) => {
@@ -151,14 +159,14 @@ const Mint = ({ account, web3 }) => {
   return (
     <div className="mint">
       <div
-        className={`fixed top-0 z-50 flex ${
+        className={`fixed top-0 flex ${
           isLoading ? '' : 'hidden'
         } h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
       >
         <img className="" src={spinner} alt="no img"></img>
       </div>
       <div className="mint-inner mx-auto flex w-2/3 justify-center pt-20">
-        <div className="relative mr-24">
+        <div className="relative mr-24 h-[800px]">
           <NftCard2
             img_check={imgCheck}
             ipfs_hash={ipfsHash}
@@ -185,7 +193,7 @@ const Mint = ({ account, web3 }) => {
             </form>
           )}
         </div>
-        <div className="w-[600px]">
+        <div className="h-[800px] w-[600px]">
           <div className="mb-8">
             <h1 className="mb-2 h-[98px] w-[483px] text-[80px] font-bold">
               Create NFT
@@ -195,16 +203,49 @@ const Mint = ({ account, web3 }) => {
             </p>
           </div>
 
-          <form className="flex flex-col">
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                className="mr-3 mt-3 mb-3 h-7 w-7 rounded-3xl drop-shadow-md"
+                type="checkbox"
+                onChange={checkHandler}
+              />
+              <div className="mr-8">
+                {checked ? (
+                  <input
+                    className="PriceSetter mb-2 w-[205px] rounded-2xl border-2 border-gray-light px-2 py-3 text-center drop-shadow-md"
+                    placeholder="Check To Set a Price"
+                    type="number"
+                  ></input>
+                ) : (
+                  <input
+                    className="PriceSetter mb-2 w-[205px] rounded-2xl border-2 border-gray-light px-2 py-3 text-center drop-shadow-md"
+                    placeholder="Check To Set a Price"
+                    type="number"
+                    disabled
+                  ></input>
+                )}
+              </div>
+              <div className=" mb-2 w-[200px] rounded-2xl border-2 border-gray-light bg-blueLight px-2 py-3 text-center text-white drop-shadow-md">
+                <button
+                  onClick={(e) => setDropdownVisibility(!dropdownVisibility)}
+                >
+                  {dropdownVisibility ? 'Close' : 'Select Category'}
+                </button>
+                <Dropdown visibility={dropdownVisibility}>
+                  <ul className="flex flex-col pl-0 text-left">
+                    <button className="hover:text-gray">Man</button>
+                    <button className="hover:text-gray">Woman</button>
+                    <button className="hover:text-gray">Dog</button>
+                    <button className="hover:text-gray">Cat</button>
+                  </ul>
+                </Dropdown>
+              </div>
+            </div>
             <input
               placeholder="Name"
               className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
               onChange={inputChange}
-            ></input>
-            <input
-              placeholder="City"
-              className="mb-2 h-12 rounded-2xl border-2 border-gray-light px-4 py-5 drop-shadow-md"
-              onChange={cityChange}
             ></input>
             <textarea
               placeholder="Description"
@@ -219,7 +260,7 @@ const Mint = ({ account, web3 }) => {
                 Create NFT
               </h1>
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

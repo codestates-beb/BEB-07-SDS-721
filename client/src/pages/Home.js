@@ -6,15 +6,29 @@ import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
   const [nfts, setNfts] = useState([]);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [index, setIndex] = useState(6);
+  const initialnfts = nfts.slice(0, index);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER}/nfts`)
+    //getData
+    fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
         setNfts([...res]);
         console.log(res);
       });
   }, []);
+
+  const loadMore = () => {
+    setIndex(index + 4);
+    console.log(index);
+    if (index >= nfts.length) {
+      setIsCompleted(true);
+    } else {
+      setIsCompleted(false);
+    }
+  };
 
   return (
     <div className="home">
@@ -23,18 +37,33 @@ const Home = () => {
           Explore, collect, and sell NFTs
         </p>
         <div className="grid grid-cols-fill-25 justify-center gap-y-12">
-          {nfts.map((nft) => (
-            <div className="mx-auto" key={nft.transactionHash}>
-              <NftCard
-                nft_img={nft.image}
-                nft_name={nft.name}
-                artist_name={nft.owner}
-                artist_profile={profile_sample}
-                price={nft.price}
-              />
-            </div>
-          ))}
+          {initialnfts.map((nft) => {
+            return (
+              <div className="mx-auto" key={nft.transactionHash}>
+                <NftCard
+                  nft_img={nft.image}
+                  nft_name={nft.name}
+                  artist_name={nft.owner}
+                  artist_profile={profile_sample}
+                  price={nft.price}
+                />
+              </div>
+            );
+          })}
         </div>
+      </div>
+      <div className="mt-[5rem] flex justify-center">
+        {isCompleted ? (
+          <button onClick={loadMore} type="button" className="hidden"></button>
+        ) : (
+          <button
+            onClick={loadMore}
+            type="button"
+            className="h-16 w-44 rounded-3xl bg-gray-light text-center drop-shadow-md transition-all hover:scale-110"
+          >
+            Load More
+          </button>
+        )}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const Details = () => {
 
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_SERVER}/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1`,
+      'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4/1',
     )
       .then((res) => res.json())
       .then((res) => {
@@ -33,10 +33,10 @@ const Details = () => {
           />
         </div>
         <input
-          className="shadow-black mx-[50px] my-[10px] h-[45px] w-[300px] rounded-2xl border-2 font-semibold"
+          className="mx-[50px] my-[10px] h-[45px] w-[300px] rounded-2xl border-2 font-semibold shadow-black"
           placeholder="                  Enter your NFT price"
         ></input>
-        <button className="shadow-black mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue">
+        <button className="mx-[50px] h-[45px] w-[300px] rounded-2xl border-2 bg-blue shadow-black">
           <h1 className="font-semibold text-white">Set a price</h1>
         </button>
       </div>

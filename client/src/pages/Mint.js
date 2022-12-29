@@ -1,5 +1,5 @@
 import './Mint.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import NftCard2 from 'components/features/NftCard_2';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
@@ -9,6 +9,7 @@ import profile_sample from 'img/profile_sample.jpg';
 
 import Contract from 'web3-eth-contract';
 import sds721ABI from 'chainUtils/sds721ABI';
+import dogNftABI from 'chainUtils/dogNftABI';
 
 const Mint = ({ account, web3 }) => {
   const projectId = process.env.REACT_APP_PROJECT_ID;
@@ -50,22 +51,22 @@ const Mint = ({ account, web3 }) => {
       if (err) {
         console.log(err);
       }
-      console.log(file[0].hash);
+      // console.log(file[0].hash);
       setIpfsHash(file[0].hash);
       setImgCheck(true);
       setLoading(false);
     });
-
-    console.log(ipfsHash);
   };
 
   async function mint(metaUri) {
     try {
-      const abi = sds721ABI;
-      const address = '0x16022D988442C70682e3566d09cd67d86e1b79e4';
+      const abi = dogNftABI;
+      const address = '0x697db94F18759deef144af868Fd657E85738B87D';
       Contract.setProvider(web3);
       const contract = new Contract(abi, address);
-      const result = await contract.methods.mintNFT(account, metaUri).call();
+      const result = await contract.methods
+        .mintNFT(account, metaUri)
+        .send({ from: account });
       return result;
     } catch (e) {
       console.log(e);
@@ -108,22 +109,13 @@ const Mint = ({ account, web3 }) => {
         ],
       });
 
-      console.log(data);
-
-      const ipfs = IpfsAPI({
-        host: 'ipfs.infura.io',
-        port: 5001,
-        protocol: 'https',
-        headers: {
-          authorization: auth,
-        },
-      });
+      // console.log(data);
 
       ipfs.files.add(Buffer.from(data), (err, file) => {
         if (err) {
           console.log(err);
         }
-        console.log(file[0].hash);
+        // console.log(file[0].hash);
         setMetaHash(file[0].hash);
         mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
           console.log(res);
@@ -177,8 +169,8 @@ const Mint = ({ account, web3 }) => {
           ) : (
             <form className="absolute inset-y-0 inset-x-0 my-[170px] mx-auto h-[60px] w-[60px] rounded-full bg-white text-6xl text-white">
               <label
-                className="block flex w-[100%] justify-center text-gray-light hover:cursor-pointer hover:text-gray"
-                for="file-input"
+                className="flex w-[100%] justify-center text-gray-light hover:cursor-pointer hover:text-gray"
+                htmlFor="file-input"
               >
                 <div>+</div>
               </label>

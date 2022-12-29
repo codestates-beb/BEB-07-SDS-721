@@ -2,11 +2,16 @@ import './Home.css';
 import NftCard from 'components/features/NftCard';
 import ScrollButton from 'components/features/ScrollButton';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import profile_sample from 'img/profile_sample.jpg';
 
 const Home = () => {
+  const location = useLocation();
+
+  const category = location.state !== null ? location.state.category : '';
+
   const navigate = useNavigate();
   const [nfts, setNfts] = useState([]);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -18,8 +23,17 @@ const Home = () => {
     fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
-        setNfts([...res]);
-        console.log(res);
+        if (category)
+          setNfts(
+            res.filter((el) => {
+              console.log(el.attributes[0]);
+              return el.attributes[0].value === category;
+            }),
+          );
+        else {
+          setNfts([...res]);
+          console.log(res);
+        }
       });
   }, []);
 

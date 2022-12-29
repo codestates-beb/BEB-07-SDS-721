@@ -17,26 +17,23 @@ const MyPage = ({ account }) => {
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
-        console.log(res);
+        // console.log(res);
       });
-  }, []);
 
-  useEffect(() => {
     fetch(`http://3.38.208.33/users/${account}/collected`)
       .then((res) => res.json())
       .then((res) => {
         setCollect([...res]);
-        console.log(res);
+        // console.log(res);
       });
-  }, []);
 
-  useEffect(() => {
     fetch(`http://3.38.208.33/users/${account}/created`)
       .then((res) => res.json())
       .then((res) => {
         setCreate([...res]);
-        console.log(res);
+        // console.log(res);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

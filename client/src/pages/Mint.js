@@ -1,5 +1,5 @@
 import './Mint.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import NftCard2 from 'components/features/NftCard_2';
 import { Buffer } from 'buffer';
 import IpfsAPI from 'ipfs-api';
@@ -7,8 +7,27 @@ import spinner from 'img/loading.gif';
 
 import profile_sample from 'img/profile_sample.jpg';
 
-const Mint = ({ account }) => {
+import Contract from 'web3-eth-contract';
+import sds721ABI from 'chainUtils/sds721ABI';
+import dogNftABI from 'chainUtils/dogNftABI';
+
+const Mint = ({ account, web3 }) => {
+  const projectId = process.env.REACT_APP_PROJECT_ID;
+  const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
+  const auth =
+    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+  const ipfs = IpfsAPI({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    headers: {
+      authorization: auth,
+    },
+  });
+
   const [ipfsHash, setIpfsHash] = useState('');
+  const [metaHash, setMetaHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
@@ -28,33 +47,32 @@ const Mint = ({ account }) => {
   };
 
   const uploadIpfs = (buffer) => {
-    const projectId = process.env.REACT_APP_PROJECT_ID;
-    const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
-    const auth =
-      'Basic ' +
-      Buffer.from(projectId + ':' + projectSecret).toString('base64');
-
-    const ipfs = IpfsAPI({
-      host: 'ipfs.infura.io',
-      port: 5001,
-      protocol: 'https',
-      headers: {
-        authorization: auth,
-      },
-    });
-
     ipfs.files.add(buffer, (err, file) => {
       if (err) {
         console.log(err);
       }
-      console.log(file[0].hash);
+      // console.log(file[0].hash);
       setIpfsHash(file[0].hash);
       setImgCheck(true);
       setLoading(false);
     });
-
-    console.log(ipfsHash);
   };
+
+  async function mint(metaUri) {
+    try {
+      const abi = dogNftABI;
+      const address = '0x697db94F18759deef144af868Fd657E85738B87D';
+      Contract.setProvider(web3);
+      const contract = new Contract(abi, address);
+      const result = await contract.methods
+        .mintNFT(account, metaUri)
+        .send({ from: account });
+      return result;
+    } catch (e) {
+      console.log(e);
+      return e;
+    }
+  }
 
   const inputChange = (e) => {
     setNftName(e.target.value);
@@ -76,7 +94,9 @@ const Mint = ({ account }) => {
     }
 
     try {
-      const data = {
+      setLoading(true);
+
+      const data = JSON.stringify({
         recipient: account,
         name: nftName,
         description: description,
@@ -87,38 +107,43 @@ const Mint = ({ account }) => {
             value: city,
           },
         ],
-      };
+      });
 
-      console.log(JSON.stringify(data));
+      // console.log(data);
 
-      const res = await fetch(
-        'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
-        {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          redirect: 'follow',
-          referrerPolicy: 'no-referrer',
-          body: JSON.stringify(data),
-        },
-      );
+      ipfs.files.add(Buffer.from(data), (err, file) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(file[0].hash);
+        setMetaHash(file[0].hash);
+        mint(`https://ipfs.io/ipfs/${metaHash}`).then((res) => {
+          console.log(res);
+          setLoading(false);
+        });
+      });
 
-      console.log(res);
-
-      // console.log('start post');
-      // const res = await axios.post(
-      //   'http://3.38.208.33/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4',
-      //   JSON.stringify(data),
+      // const res = await fetch(
+      //   `${process.env.REACT_APP_SERVER}/nfts/0x16022D988442C70682e3566d09cd67d86e1b79e4`,
       //   {
-      //     headers: { 'Content-Type': `application/json` },
+      //     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      //     mode: 'cors', // no-cors, *cors, same-origin
+      //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      //     credentials: 'same-origin', // include, *same-origin, omit
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     redirect: 'follow',
+      //     referrerPolicy: 'no-referrer',
+      //     body: JSON.stringify(data),
       //   },
       // );
-      // console.log(res);
-    } catch {}
+
+      // setLoading(false);
+    } catch {
+      alert('error!');
+      setLoading(false);
+    }
   };
 
   return (
@@ -144,8 +169,8 @@ const Mint = ({ account }) => {
           ) : (
             <form className="absolute inset-y-0 inset-x-0 my-[170px] mx-auto h-[60px] w-[60px] rounded-full bg-white text-6xl text-white">
               <label
-                className="block flex w-[100%] justify-center text-gray-light hover:cursor-pointer hover:text-gray"
-                for="file-input"
+                className="flex w-[100%] justify-center text-gray-light hover:cursor-pointer hover:text-gray"
+                htmlFor="file-input"
               >
                 <div>+</div>
               </label>

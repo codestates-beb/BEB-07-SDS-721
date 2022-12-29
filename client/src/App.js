@@ -78,7 +78,10 @@ function App() {
             element={<Mint account={account} web3={web3} />}
           ></Route>
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
-          <Route path="/details" element={<Details />}></Route>
+          <Route
+            path="/details"
+            element={<Details account={account} />}
+          ></Route>
         </Routes>
         <Footer />
       </div>

@@ -12,7 +12,7 @@ const Explore = () => {
   const navigate = useNavigate();
 
   const categoryClick = (category) => {
-    navigate('/', {
+    navigate('/explore/category', {
       state: {
         category,
       },
@@ -35,7 +35,7 @@ const Explore = () => {
         <div
           className=""
           onClick={() => {
-            categoryClick('suwon');
+            categoryClick('man');
           }}
         >
           <CategoryCard category_img={categorySample1} category_name="Man" />

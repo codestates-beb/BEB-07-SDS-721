@@ -1,0 +1,11 @@
+{
+  "name": "marketV1 #8",
+  "description": "market #8 description",
+  "image": "https://randomuser.me/api/portraits/men/18.jpg",
+  "attributes": [
+    {
+      "trait_type": "category",
+      "value": "man"
+    }
+  ]
+}

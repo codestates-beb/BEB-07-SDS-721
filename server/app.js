@@ -17,6 +17,7 @@ const {
   sds721EventListener,
   womanNftEventListener,
   dogNftEventListener,
+  MarketNftEventListener,
 } = require('./web3/txEventListener');
 
 const app = express();
@@ -65,7 +66,8 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), 'is up and listening');
 });
-sds721EventListener();
-womanNftEventListener();
-dogNftEventListener();
+// sds721EventListener();
+// womanNftEventListener();
+// dogNftEventListener();
+MarketNftEventListener();
 module.exports = app;

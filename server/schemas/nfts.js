@@ -29,7 +29,7 @@ const nftSchema = new Schema(
     },
     sale: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     price: {
       type: Number,

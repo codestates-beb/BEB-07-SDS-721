@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// require('dotenv').config({ path: '../.env' });
+
 const connect = () => {
   if (process.env.SERVER_ENV !== 'production') {
     mongoose.set('debug', true);
@@ -10,6 +10,7 @@ const connect = () => {
     process.env.MONGO_URI,
     {
       dbName: 'SDS-721',
+      // dbName: 'Production',
       useNewUrlParser: true,
     },
     (err) => {

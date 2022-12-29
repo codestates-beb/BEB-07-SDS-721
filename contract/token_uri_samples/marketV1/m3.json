@@ -1,0 +1,11 @@
+{
+  "name": "marketV1 #3",
+  "description": "market #3 description",
+  "image": "https://randomuser.me/api/portraits/women/13.jpg",
+  "attributes": [
+    {
+      "trait_type": "category",
+      "value": "woman"
+    }
+  ]
+}

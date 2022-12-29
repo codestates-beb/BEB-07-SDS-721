@@ -2,7 +2,6 @@
 /* eslint-disable no-underscore-dangle */
 const Web3 = require('web3');
 const axios = require('axios');
-const wait = require('wwait');
 const originalFetch = require('isomorphic-fetch');
 const fetch = require('fetch-retry')(originalFetch);
 
@@ -12,9 +11,16 @@ const Collection = require('../schemas/collections');
 const sds721ABI = require('../chainUtils/sds721ABI');
 const womanNftABI = require('../chainUtils/womanNftABI');
 const dogNftABI = require('../chainUtils/dogNftABI');
+const marketV1ABI = require('../chainUtils/marketV1ABI');
 
-const { SDS721CA, WOMANNFTCA, DOGNFTCA, GOERLIWEBSOCKET, GOERLIURI } =
-  process.env;
+const {
+  SDS721CA,
+  WOMANNFTCA,
+  DOGNFTCA,
+  MARKETV1CA,
+  GOERLIWEBSOCKET,
+  GOERLIURI,
+} = process.env;
 
 // const GOERLIWEBSOCKET =
 //   'wss://goerli.infura.io/ws/v3/f09f2f4de3164c8eb1a057b84bae7113';
@@ -32,24 +38,13 @@ const getTxData = async (txHash) => {
 
 const getTokenURIData = async (tokenURI) => {
   console.log({ tokenURI });
-  const data = await fetch(tokenURI, {
-    retries: 10,
-    retryDelay: 5000,
-  });
-  // while (!data) {
-  //   wait(2000);
-  //   try {
-  //     const result = await axios.get(tokenURI);
-  //     console.log('getTokendata get request result', result);
-  //     data = result.data;
-  //   } catch (err) {
-  //     data = null;
-  //     console.log(Date.now());
-  //     console.log('getTokenUriData error thrown', err);
-  //   }
-  // }
-  console.log('found data from tokenURI', data);
-  return data;
+  // const data = await fetch(tokenURI, {
+  //   retries: 10,
+  //   retryDelay: 5000,
+  // });
+  const result = await axios.get(tokenURI);
+  console.log(result.data);
+  return result.data;
 };
 
 const updateUserDB = async (account) => {
@@ -163,6 +158,37 @@ module.exports = {
       Contract.events.Transfer().on('data', async (event) => {
         const { transactionHash, address, returnValues } = event;
         const { tokenId, to } = returnValues;
+        // get metadata of minted nft with web3 call
+        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+
+        const txData = await getTxData(transactionHash);
+        const tokenData = await getTokenURIData(tokenURI);
+        console.log({ tokenData });
+        tokenData.contractAddress = address;
+        tokenData.tokenId = tokenId;
+        tokenData.transactionHash = transactionHash;
+        tokenData.tokenURI = tokenURI;
+        tokenData.owner = to;
+        tokenData.creator = txData.from; // TODO make variable
+
+        await updateCollectionDB(Contract, tokenData);
+        await updateUserDB(tokenData.owner);
+        await updateUserDB(tokenData.creator);
+        await updateNftDB(tokenData);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  MarketNftEventListener: () => {
+    // need to parse data differently
+    // need to consider data pingpongs
+    try {
+      const Contract = new web3Socket.eth.Contract(marketV1ABI, MARKETV1CA);
+      Contract.events.Transfer().on('data', async (event) => {
+        const { transactionHash, address, returnValues } = event;
+        const { tokenId, to } = returnValues;
+        console.log({ event });
         // get metadata of minted nft with web3 call
         const tokenURI = await Contract.methods.tokenURI(tokenId).call();
 

@@ -1,6 +1,7 @@
 import './MyPage.css';
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import NftCard from 'components/features/NftCard';
 import MyPageSample1 from 'img/myPage_sample_1.png';
@@ -8,6 +9,7 @@ import MyPageSample2 from 'img/myPage_sample_2.png';
 import profile_sample from 'img/profile_sample.jpg';
 
 const MyPage = ({ account }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [collected, setCollect] = useState([]);
   const [created, setCreate] = useState([]);
@@ -35,6 +37,10 @@ const MyPage = ({ account }) => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const cardClick = (id, address) => {
+    navigate('/details', { state: { id, address } });
+  };
 
   return (
     <div className="mypage">
@@ -66,7 +72,13 @@ const MyPage = ({ account }) => {
 
         <div className="mt-[3rem] grid grid-cols-fill-25 justify-start">
           {collected.map((nft) => (
-            <div className="" key={nft.transactionHash}>
+            <div
+              className=""
+              key={nft.transactionHash}
+              onClick={() => {
+                cardClick(nft.tokenId, nft.contractAddress);
+              }}
+            >
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}
@@ -84,7 +96,13 @@ const MyPage = ({ account }) => {
 
         <div className="mt-[3rem] grid grid-cols-fill-25 justify-start gap-y-12">
           {created.map((nft) => (
-            <div className="" key={nft.transactionHash}>
+            <div
+              className=""
+              key={nft.transactionHash}
+              onClick={() => {
+                cardClick(nft.tokenId, nft.contractAddress);
+              }}
+            >
               <NftCard
                 nft_img={nft.image}
                 nft_name={nft.name}

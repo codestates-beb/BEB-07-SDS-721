@@ -14,7 +14,7 @@ import Details from 'pages/Details';
 
 function App() {
   const [web3, setWeb3] = useState();
-  const [account, setAccount] = useState('');
+  const [account, setAccount] = useState(sessionStorage.getItem('account'));
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
@@ -29,11 +29,13 @@ function App() {
   }, []);
 
   const connectWallet = async () => {
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts',
-    });
-
-    setAccount(accounts[0]);
+    try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      sessionStorage.setItem('account', accounts[0]);
+      setAccount(accounts[0]);
+    } catch (e) {}
   };
 
   const disconnectWallet = async () => {
@@ -67,7 +69,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/explore" element={<Explore />}></Route>
-          <Route path="/mint" element={<Mint account={account} />}></Route>
+          <Route
+            path="/mint"
+            element={<Mint account={account} web3={web3} />}
+          ></Route>
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
           <Route path="/details" element={<Details />}></Route>
         </Routes>

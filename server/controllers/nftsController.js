@@ -5,8 +5,8 @@ const Web3 = require('web3');
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
 const Collection = require('../schemas/collections');
-const sds721ABI = require('../chainUtils/sds721ABI');
-const womanNftABI = require('../chainUtils/womanNftABI');
+const sds721ABI = require('../web3/ABIs/sds721ABI');
+const womanNftABI = require('../web3/ABIs/womanNftABI');
 
 const { SDS721CA, WOMANNFTCA, SEOLPK, KWONPK, GOERLIURI } = process.env;
 

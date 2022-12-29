@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import NftCard from 'components/features/NftCard';
+import ScrollButton from 'components/features/ScrollButton';
 import MyPageSample1 from 'img/myPage_sample_1.png';
 import MyPageSample2 from 'img/myPage_sample_2.png';
 import profile_sample from 'img/profile_sample.jpg';
@@ -113,6 +114,9 @@ const MyPage = ({ account }) => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="fixed bottom-11 right-11">
+        <ScrollButton />
       </div>
     </div>
   );

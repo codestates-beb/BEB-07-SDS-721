@@ -10,7 +10,7 @@ import spinner from 'img/loading.gif';
 import profile_sample from 'img/profile_sample.jpg';
 
 import Contract from 'web3-eth-contract';
-import dogNftABI from 'chainUtils/dogNftABI';
+import marketABI from 'chainUtils/marketNftABI';
 
 const Mint = ({ account, web3 }) => {
   // const projectId = process.env.REACT_APP_PROJECT_ID;
@@ -33,10 +33,11 @@ const Mint = ({ account, web3 }) => {
   const [imgCheck, setImgCheck] = useState(false);
   const [nftName, setNftName] = useState('');
   const [description, setDescription] = useState('');
-  const [city, setCity] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [price, setPrice] = useState(-1);
+  const [category, setCategory] = useState('');
 
   const captureFile = (event) => {
     setLoading(true);
@@ -65,13 +66,16 @@ const Mint = ({ account, web3 }) => {
   async function mint(metaUri) {
     try {
       console.log(metaUri);
-      const abi = dogNftABI;
-      const address = '0x697db94F18759deef144af868Fd657E85738B87D';
+      const abi = marketABI;
+      const address = '0x928f95240c039996F069358B2867903FDaf8afAb';
       Contract.setProvider(web3);
       const contract = new Contract(abi, address);
-      const result = await contract.methods
-        .mintNFT(account, metaUri)
-        .send({ from: account });
+      const result = await contract.methods.createToken(metaUri, price).send({
+        from: account,
+        gasPrice: 6000000000,
+        gas: 2100000,
+        value: 10000000000000000,
+      });
       return result;
     } catch (e) {
       console.log(e);
@@ -83,10 +87,6 @@ const Mint = ({ account, web3 }) => {
     setNftName(e.target.value);
   };
 
-  const cityChange = (e) => {
-    setCity(e.target.value);
-  };
-
   const descriptChange = (e) => {
     setDescription(e.target.value);
   };
@@ -95,9 +95,13 @@ const Mint = ({ account, web3 }) => {
     setChecked(!checked);
   };
 
+  const priceChange = (e) => {
+    setPrice(e.target.value);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    if (!city || !description || !nftName) {
+    if (!category || !description || !nftName) {
       alert('please write all field!');
       return;
     }
@@ -106,19 +110,18 @@ const Mint = ({ account, web3 }) => {
       setLoading(true);
 
       const data = JSON.stringify({
-        recipient: account,
         name: nftName,
         description: description,
         image: `https://ipfs.io/ipfs/${ipfsHash}`,
         attributes: [
           {
-            trait_type: 'city',
-            value: city,
+            trait_type: 'category',
+            value: category,
           },
         ],
       });
 
-      // console.log(data);
+      console.log(data);
 
       ipfs.files.add(Buffer.from(data), (err, file) => {
         if (err) {
@@ -214,6 +217,7 @@ const Mint = ({ account, web3 }) => {
                     className="PriceSetter mb-2 w-[205px] rounded-2xl border-2 border-gray-light px-2 py-3 text-center drop-shadow-md"
                     placeholder="Check To Set a Price"
                     type="number"
+                    onChange={priceChange}
                   ></input>
                 ) : (
                   <input
@@ -224,18 +228,51 @@ const Mint = ({ account, web3 }) => {
                   ></input>
                 )}
               </div>
-              <div className=" mb-2 w-[200px] rounded-2xl border-2 border-gray-light bg-blueLight px-2 py-3 text-center text-white drop-shadow-md">
+              <div className="mb-2 w-[200px] rounded-2xl border-2 border-gray-light bg-blueLight px-2 py-3 text-center text-white drop-shadow-md">
                 <button
+                  className={dropdownVisibility ? 'hidden' : ''}
                   onClick={(e) => setDropdownVisibility(!dropdownVisibility)}
                 >
-                  {dropdownVisibility ? 'Close' : 'Select Category'}
+                  {category ? category : 'Select Category'}
                 </button>
                 <Dropdown visibility={dropdownVisibility}>
                   <ul className="flex flex-col pl-0 text-left">
-                    <button className="hover:text-gray">Man</button>
-                    <button className="hover:text-gray">Woman</button>
-                    <button className="hover:text-gray">Dog</button>
-                    <button className="hover:text-gray">Cat</button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('man');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      man
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('woman');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      woman
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('dog');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      dog
+                    </button>
+                    <button
+                      className="hover:text-gray"
+                      onClick={() => {
+                        setCategory('cat');
+                        setDropdownVisibility(!dropdownVisibility);
+                      }}
+                    >
+                      cat
+                    </button>
                   </ul>
                 </Dropdown>
               </div>

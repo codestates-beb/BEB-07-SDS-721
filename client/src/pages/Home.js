@@ -8,7 +8,7 @@ const Home = () => {
   const [nfts, setNfts] = useState([]);
 
   useEffect(() => {
-    fetch('http://snowdelver.iptime.org/nfts')
+    fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
         setNfts([...res]);

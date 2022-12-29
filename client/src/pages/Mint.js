@@ -11,6 +11,20 @@ import Contract from 'web3-eth-contract';
 import sds721ABI from 'chainUtils/sds721ABI';
 
 const Mint = ({ account, web3 }) => {
+  const projectId = process.env.REACT_APP_PROJECT_ID;
+  const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
+  const auth =
+    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+  const ipfs = IpfsAPI({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    headers: {
+      authorization: auth,
+    },
+  });
+
   const [ipfsHash, setIpfsHash] = useState('');
   const [metaHash, setMetaHash] = useState('');
   const [imgCheck, setImgCheck] = useState(false);
@@ -32,21 +46,6 @@ const Mint = ({ account, web3 }) => {
   };
 
   const uploadIpfs = (buffer) => {
-    const projectId = process.env.REACT_APP_PROJECT_ID;
-    const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
-    const auth =
-      'Basic ' +
-      Buffer.from(projectId + ':' + projectSecret).toString('base64');
-
-    const ipfs = IpfsAPI({
-      host: 'ipfs.infura.io',
-      port: 5001,
-      protocol: 'https',
-      headers: {
-        authorization: auth,
-      },
-    });
-
     ipfs.files.add(buffer, (err, file) => {
       if (err) {
         console.log(err);
@@ -95,12 +94,6 @@ const Mint = ({ account, web3 }) => {
 
     try {
       setLoading(true);
-
-      const projectId = process.env.REACT_APP_PROJECT_ID;
-      const projectSecret = process.env.REACT_APP_PROJECT_SECRET;
-      const auth =
-        'Basic ' +
-        Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
       const data = JSON.stringify({
         recipient: account,

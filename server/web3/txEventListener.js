@@ -30,25 +30,31 @@ const getTokenURIData = async (tokenURI) => {
 };
 
 const updateUserDB = async (account) => {
-  const user = await User.findOneAndUpdate(
-    { account },
-    {
-      upsert: true,
-    },
-  );
+  let user = await User.findOne({ account });
+  if (!user) {
+    user = await User.findOneAndUpdate(
+      { account },
+      { account, nickname: 'anonymous', collected: [], created: [] },
+      {
+        upsert: true,
+      },
+    );
+  }
+  console.log(user);
   return user;
 };
 
 const updateNftDB = async (tokenData) => {
   if (tokenData.txType === 'mint') {
     const { contractAddress, tokenId, creator, owner } = tokenData;
-    const nft = await Nft.findOneAndUpdate(
+    let nft = await Nft.findOneAndUpdate(
       { contractAddress, tokenId },
       tokenData,
       {
         upsert: true,
       },
     );
+    nft = await Nft.findOne({ contractAddress, tokenId });
     await User.updateOne(
       { account: creator },
       { $addToSet: { created: nft._id } },
@@ -70,15 +76,21 @@ const updateNftDB = async (tokenData) => {
   const oldOwner = nft.owner;
   tokenData.creator = nft.creator;
   nft = await Nft.findOneAndUpdate({ contractAddress, tokenId }, tokenData);
-
-  await User.updateOne(
-    { account: oldOwner },
-    { $pull: { collected: nft._id } },
-  );
-  await User.updateOne(
-    { account: newOwner },
-    { $addToSet: { collected: nft._id } },
-  );
+  nft = await Nft.findOne({ contractAddress, tokenId });
+  if (nft) {
+    try {
+      await User.updateOne(
+        { account: oldOwner },
+        { $pull: { collected: nft._id } },
+      );
+      await User.updateOne(
+        { account: newOwner },
+        { $addToSet: { collected: nft._id } },
+      );
+    } catch (err) {
+      logger.error(err);
+    }
+  }
   return nft;
 };
 
@@ -97,12 +109,18 @@ const updateCollectionDB = async (Contract, tokenData) => {
     } else {
       owner = await Contract.methods.owner().call();
     }
-    collection = await Collection.create({
-      contractAddress,
-      name,
-      symbol,
-      owner,
-    });
+    collection = await Collection.findOneAndUpdate(
+      { contractAddress },
+      {
+        contractAddress,
+        name,
+        symbol,
+        owner,
+      },
+      {
+        upsert: true,
+      },
+    );
   }
   return collection;
 };

@@ -10,8 +10,8 @@ const connect = () => {
   mongoose.connect(
     process.env.MONGO_URI,
     {
-      dbName: 'SDS-721',
-      // dbName: 'Production',
+      // dbName: 'SDS-721',
+      dbName: 'Production',
       useNewUrlParser: true,
     },
     (err) => {

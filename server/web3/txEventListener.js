@@ -30,13 +30,16 @@ const getTokenURIData = async (tokenURI) => {
 };
 
 const updateUserDB = async (account) => {
-  const user = await User.findOneAndUpdate(
-    { account },
-    { account, nickname: 'anonymous', collected: [], created: [] },
-    {
-      upsert: true,
-    },
-  );
+  let user = await User.findOne({ account });
+  if (!user) {
+    user = await User.findOneAndUpdate(
+      { account },
+      { account, nickname: 'anonymous', collected: [], created: [] },
+      {
+        upsert: true,
+      },
+    );
+  }
   console.log(user);
   return user;
 };

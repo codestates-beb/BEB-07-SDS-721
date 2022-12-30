@@ -127,62 +127,58 @@ const updateCollectionDB = async (Contract, tokenData) => {
 
 module.exports = {
   MarketNftEventListener: () => {
-    try {
-      const Contract = new web3Socket.eth.Contract(marketV2ABI, MARKETV2CA);
-      Contract.events.Transfer().on('data', async (event) => {
-        const { transactionHash, address, returnValues } = event;
-        const isExist = await Transaction.findOne({ transactionHash });
-        if (isExist) {
-          logger.info(`TransactionHash : ${transactionHash} Already processed`);
-          return;
-        }
-        await Transaction.create({ transactionHash });
+    const Contract = new web3Socket.eth.Contract(marketV2ABI, MARKETV2CA);
+    Contract.events.Transfer().on('data', async (event) => {
+      const { transactionHash, address, returnValues } = event;
+      const isExist = await Transaction.findOne({ transactionHash });
+      if (isExist) {
+        logger.info(`TransactionHash : ${transactionHash} Already processed`);
+        return;
+      }
+      await Transaction.create({ transactionHash });
 
-        const { tokenId } = returnValues;
-        // get metadata of minted nft with web3 call
-        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+      const { tokenId } = returnValues;
+      // get metadata of minted nft with web3 call
+      const tokenURI = await Contract.methods.tokenURI(tokenId).call();
 
-        const txData = await getTxData(transactionHash);
-        const tokenData = await getTokenURIData(tokenURI);
-        // logger.info({ event });
-        // logger.info({ txData });
+      const txData = await getTxData(transactionHash);
+      const tokenData = await getTokenURIData(tokenURI);
+      // logger.info({ event });
+      // logger.info({ txData });
 
-        const queryTokenData = await Contract.methods
-          .getListedTokenForId(tokenId)
-          .call();
-        logger.info(queryTokenData);
-        console.assert(
-          tokenId === queryTokenData[0],
-          'tokenId and data is not matching',
-        );
+      const queryTokenData = await Contract.methods
+        .getListedTokenForId(tokenId)
+        .call();
+      logger.info(queryTokenData);
+      console.assert(
+        tokenId === queryTokenData[0],
+        'tokenId and data is not matching',
+      );
 
-        tokenData.contractAddress = address;
-        tokenData.tokenId = tokenId;
-        tokenData.transactionHash = transactionHash;
-        tokenData.tokenURI = tokenURI;
-        tokenData.sale = queryTokenData.currentlyListed;
-        tokenData.price = queryTokenData.price;
+      tokenData.contractAddress = address;
+      tokenData.tokenId = tokenId;
+      tokenData.transactionHash = transactionHash;
+      tokenData.tokenURI = tokenURI;
+      tokenData.sale = queryTokenData.currentlyListed;
+      tokenData.price = queryTokenData.price;
 
-        if (txData.input.length >= 330) {
-          tokenData.txType = 'mint';
-          tokenData.creator = txData.from;
-          tokenData.owner = queryTokenData.seller;
-        } else {
-          tokenData.txType = 'sale';
-          tokenData.owner = txData.from;
-          tokenData.creator = null;
-        }
-        logger.info({ tokenData });
+      if (txData.input.length >= 330) {
+        tokenData.txType = 'mint';
+        tokenData.creator = txData.from;
+        tokenData.owner = queryTokenData.seller;
+      } else {
+        tokenData.txType = 'sale';
+        tokenData.owner = txData.from;
+        tokenData.creator = null;
+      }
+      logger.info({ tokenData });
 
-        await updateCollectionDB(Contract, tokenData);
-        await updateUserDB(tokenData.owner);
-        if (tokenData.creator) {
-          await updateUserDB(tokenData.creator);
-        }
-        await updateNftDB(tokenData);
-      });
-    } catch (err) {
-      logger.error(err);
-    }
+      await updateCollectionDB(Contract, tokenData);
+      await updateUserDB(tokenData.owner);
+      if (tokenData.creator) {
+        await updateUserDB(tokenData.creator);
+      }
+      await updateNftDB(tokenData);
+    });
   },
 };

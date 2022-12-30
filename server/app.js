@@ -6,19 +6,15 @@ const morgan = require('morgan');
 const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const logger = require('./logger');
 
 const connect = require('./schemas');
 
 connect();
-const devRouter = require('./routes/dev');
+
 const nftsRouter = require('./routes/nfts');
 const usersRouter = require('./routes/users');
-const {
-  sds721EventListener,
-  womanNftEventListener,
-  dogNftEventListener,
-  MarketNftEventListener,
-} = require('./web3/txEventListener');
+const { MarketNftEventListener } = require('./web3/txEventListener');
 
 const app = express();
 app.set('port', process.env.PORT || 5050);
@@ -46,9 +42,14 @@ app.use(
   }),
 );
 
-app.use('/dev', devRouter);
 app.use('/users', usersRouter);
 app.use('/nfts', nftsRouter);
+app.use('/', (req, res) => {
+  return res.json({
+    status: 'ok',
+    message: 'this is api for sds-721 project, please make valid api call',
+  });
+});
 
 app.use((req, res, next) => {
   const err = new Error(`${req.method} ${req.url} There is no Router`);
@@ -64,10 +65,8 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(app.get('port'), () => {
-  console.log(app.get('port'), 'is up and listening');
+  logger.info(app.get('port'), 'is up and listening');
 });
-// sds721EventListener();
-// womanNftEventListener();
-// dogNftEventListener();
+
 MarketNftEventListener();
 module.exports = app;

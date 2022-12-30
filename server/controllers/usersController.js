@@ -1,5 +1,6 @@
 const User = require('../schemas/users');
 const Nft = require('../schemas/nfts');
+const logger = require('../logger');
 
 module.exports = {
   login: async (req, res, next) => {
@@ -11,7 +12,7 @@ module.exports = {
       }
       return res.status(200).json(foundAccount);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -21,7 +22,6 @@ module.exports = {
     if (!foundAccount) {
       return res.status(404).json({ status: 'error', message: 'no such user' });
     }
-    console.log(foundAccount);
     return res.json(foundAccount);
   },
   userInfo: async (req, res, next) => {
@@ -35,7 +35,7 @@ module.exports = {
       }
       return res.status(200).json(queryResult);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -54,7 +54,7 @@ module.exports = {
       });
       return res.status(200).json(nfts);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -72,7 +72,7 @@ module.exports = {
       });
       return res.status(200).json(nfts);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },
@@ -90,7 +90,7 @@ module.exports = {
       });
       return res.status(200).json(nfts);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return next(err);
     }
   },

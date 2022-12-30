@@ -9,7 +9,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
     if (!account) {
       e.preventDefault();
       await connectWallet();
-      navigate('/mypage');
+      if (account) navigate('/mypage');
     }
   };
 
@@ -17,13 +17,8 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
     if (!account) {
       e.preventDefault();
       await connectWallet();
-      navigate('/mint');
+      if (account) navigate('/mint');
     }
-  };
-
-  const homePageClick = (e) => {
-    e.preventDefault();
-    navigate('/home', { state: { category: 'home' } });
   };
 
   return (
@@ -47,14 +42,14 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
           <li className="h-[100%]">
             {account ? (
               <button
-                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-white"
+                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-blue"
                 onClick={disconnectWallet}
               >
                 Log Out
               </button>
             ) : (
               <button
-                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-white"
+                className="bg-blue-light hover:text-blue-light mr-[10px] flex h-[100%] w-[140px] items-center justify-center rounded-3xl hover:cursor-pointer hover:bg-blue"
                 onClick={connectWallet}
               >
                 Log In

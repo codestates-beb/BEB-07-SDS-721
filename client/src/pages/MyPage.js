@@ -16,6 +16,7 @@ const MyPage = ({ account }) => {
   const [created, setCreate] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetch(`http://3.38.208.33/users/${account}`)
       .then((res) => res.json())
       .then((res) => {
@@ -75,7 +76,7 @@ const MyPage = ({ account }) => {
           {collected.map((nft) => (
             <div
               className=""
-              key={nft.transactionHash}
+              key={nft._id}
               onClick={() => {
                 cardClick(nft.tokenId, nft.contractAddress);
               }}
@@ -99,7 +100,7 @@ const MyPage = ({ account }) => {
           {created.map((nft) => (
             <div
               className=""
-              key={nft.transactionHash}
+              key={nft._id}
               onClick={() => {
                 cardClick(nft.tokenId, nft.contractAddress);
               }}

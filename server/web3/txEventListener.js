@@ -30,25 +30,31 @@ const getTokenURIData = async (tokenURI) => {
 };
 
 const updateUserDB = async (account) => {
-  const user = await User.findOneAndUpdate(
-    { account },
-    {
-      upsert: true,
-    },
-  );
+  let user = await User.findOne({ account });
+  if (!user) {
+    user = await User.findOneAndUpdate(
+      { account },
+      { account, nickname: 'anonymous', collected: [], created: [] },
+      {
+        upsert: true,
+      },
+    );
+  }
+  console.log(user);
   return user;
 };
 
 const updateNftDB = async (tokenData) => {
   if (tokenData.txType === 'mint') {
     const { contractAddress, tokenId, creator, owner } = tokenData;
-    const nft = await Nft.findOneAndUpdate(
+    let nft = await Nft.findOneAndUpdate(
       { contractAddress, tokenId },
       tokenData,
       {
         upsert: true,
       },
     );
+    nft = await Nft.findOne({ contractAddress, tokenId });
     await User.updateOne(
       { account: creator },
       { $addToSet: { created: nft._id } },
@@ -70,15 +76,21 @@ const updateNftDB = async (tokenData) => {
   const oldOwner = nft.owner;
   tokenData.creator = nft.creator;
   nft = await Nft.findOneAndUpdate({ contractAddress, tokenId }, tokenData);
-
-  await User.updateOne(
-    { account: oldOwner },
-    { $pull: { collected: nft._id } },
-  );
-  await User.updateOne(
-    { account: newOwner },
-    { $addToSet: { collected: nft._id } },
-  );
+  nft = await Nft.findOne({ contractAddress, tokenId });
+  if (nft) {
+    try {
+      await User.updateOne(
+        { account: oldOwner },
+        { $pull: { collected: nft._id } },
+      );
+      await User.updateOne(
+        { account: newOwner },
+        { $addToSet: { collected: nft._id } },
+      );
+    } catch (err) {
+      logger.error(err);
+    }
+  }
   return nft;
 };
 
@@ -97,74 +109,76 @@ const updateCollectionDB = async (Contract, tokenData) => {
     } else {
       owner = await Contract.methods.owner().call();
     }
-    collection = await Collection.create({
-      contractAddress,
-      name,
-      symbol,
-      owner,
-    });
+    collection = await Collection.findOneAndUpdate(
+      { contractAddress },
+      {
+        contractAddress,
+        name,
+        symbol,
+        owner,
+      },
+      {
+        upsert: true,
+      },
+    );
   }
   return collection;
 };
 
 module.exports = {
   MarketNftEventListener: () => {
-    try {
-      const Contract = new web3Socket.eth.Contract(marketV2ABI, MARKETV2CA);
-      Contract.events.Transfer().on('data', async (event) => {
-        const { transactionHash, address, returnValues } = event;
-        const isExist = await Transaction.findOne({ transactionHash });
-        if (isExist) {
-          logger.info(`TransactionHash : ${transactionHash} Already processed`);
-          return;
-        }
-        await Transaction.create({ transactionHash });
+    const Contract = new web3Socket.eth.Contract(marketV2ABI, MARKETV2CA);
+    Contract.events.Transfer().on('data', async (event) => {
+      const { transactionHash, address, returnValues } = event;
+      const isExist = await Transaction.findOne({ transactionHash });
+      if (isExist) {
+        logger.info(`TransactionHash : ${transactionHash} Already processed`);
+        return;
+      }
+      await Transaction.create({ transactionHash });
 
-        const { tokenId } = returnValues;
-        // get metadata of minted nft with web3 call
-        const tokenURI = await Contract.methods.tokenURI(tokenId).call();
+      const { tokenId } = returnValues;
+      // get metadata of minted nft with web3 call
+      const tokenURI = await Contract.methods.tokenURI(tokenId).call();
 
-        const txData = await getTxData(transactionHash);
-        const tokenData = await getTokenURIData(tokenURI);
-        // logger.info({ event });
-        // logger.info({ txData });
+      const txData = await getTxData(transactionHash);
+      const tokenData = await getTokenURIData(tokenURI);
+      // logger.info({ event });
+      // logger.info({ txData });
 
-        const queryTokenData = await Contract.methods
-          .getListedTokenForId(tokenId)
-          .call();
-        logger.info(queryTokenData);
-        console.assert(
-          tokenId === queryTokenData[0],
-          'tokenId and data is not matching',
-        );
+      const queryTokenData = await Contract.methods
+        .getListedTokenForId(tokenId)
+        .call();
+      logger.info(queryTokenData);
+      console.assert(
+        tokenId === queryTokenData[0],
+        'tokenId and data is not matching',
+      );
 
-        tokenData.contractAddress = address;
-        tokenData.tokenId = tokenId;
-        tokenData.transactionHash = transactionHash;
-        tokenData.tokenURI = tokenURI;
-        tokenData.sale = queryTokenData.currentlyListed;
-        tokenData.price = queryTokenData.price;
+      tokenData.contractAddress = address;
+      tokenData.tokenId = tokenId;
+      tokenData.transactionHash = transactionHash;
+      tokenData.tokenURI = tokenURI;
+      tokenData.sale = queryTokenData.currentlyListed;
+      tokenData.price = queryTokenData.price;
 
-        if (txData.input.length >= 330) {
-          tokenData.txType = 'mint';
-          tokenData.creator = txData.from;
-          tokenData.owner = queryTokenData.seller;
-        } else {
-          tokenData.txType = 'sale';
-          tokenData.owner = txData.from;
-          tokenData.creator = null;
-        }
-        logger.info({ tokenData });
+      if (txData.input.length >= 330) {
+        tokenData.txType = 'mint';
+        tokenData.creator = txData.from;
+        tokenData.owner = queryTokenData.seller;
+      } else {
+        tokenData.txType = 'sale';
+        tokenData.owner = txData.from;
+        tokenData.creator = null;
+      }
+      logger.info({ tokenData });
 
-        await updateCollectionDB(Contract, tokenData);
-        await updateUserDB(tokenData.owner);
-        if (tokenData.creator) {
-          await updateUserDB(tokenData.creator);
-        }
-        await updateNftDB(tokenData);
-      });
-    } catch (err) {
-      logger.error(err);
-    }
+      await updateCollectionDB(Contract, tokenData);
+      await updateUserDB(tokenData.owner);
+      if (tokenData.creator) {
+        await updateUserDB(tokenData.creator);
+      }
+      await updateNftDB(tokenData);
+    });
   },
 };

@@ -80,7 +80,7 @@ function App() {
           <Route path="/mypage" element={<MyPage account={account} />}></Route>
           <Route
             path="/details"
-            element={<Details account={account} />}
+            element={<Details account={account} web3={web3} />}
           ></Route>
         </Routes>
         <Footer />

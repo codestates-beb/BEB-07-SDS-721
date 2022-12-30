@@ -33,7 +33,7 @@ const Explore = () => {
 
       <div className="flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
         <div
-          className=""
+          className="hover:cursor-pointer"
           onClick={() => {
             categoryClick('man');
           }}
@@ -42,7 +42,7 @@ const Explore = () => {
         </div>
 
         <div
-          className=""
+          className="hover:cursor-pointer"
           onClick={() => {
             categoryClick('woman');
           }}
@@ -53,7 +53,7 @@ const Explore = () => {
 
       <div className="categoryCard flex flex-wrap justify-center gap-4 px-[2rem] py-[1rem]">
         <div
-          className=""
+          className="hover:cursor-pointer"
           onClick={() => {
             categoryClick('dog');
           }}
@@ -62,7 +62,7 @@ const Explore = () => {
         </div>
 
         <div
-          className=""
+          className="hover:cursor-pointer"
           onClick={() => {
             categoryClick('cat');
           }}

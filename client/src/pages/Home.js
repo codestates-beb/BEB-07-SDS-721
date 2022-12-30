@@ -21,7 +21,7 @@ const Home = ({ isHome }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     //getData
-    fetch('http://3.38.208.33/nfts')
+    fetch('http://3.38.27.39/nfts')
       .then((res) => res.json())
       .then((res) => {
         const randomSort = res.sort(() => Math.random() - 0.5);

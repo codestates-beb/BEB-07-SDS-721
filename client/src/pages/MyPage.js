@@ -17,21 +17,21 @@ const MyPage = ({ account }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(`http://3.38.208.33/users/${account}`)
+    fetch(`http://3.38.27.39/users/${account}`)
       .then((res) => res.json())
       .then((res) => {
         setUser(res);
         // console.log(res);
       });
 
-    fetch(`http://3.38.208.33/users/${account}/collected`)
+    fetch(`http://3.38.27.39/users/${account}/collected`)
       .then((res) => res.json())
       .then((res) => {
         setCollect([...res]);
         // console.log(res);
       });
 
-    fetch(`http://3.38.208.33/users/${account}/created`)
+    fetch(`http://3.38.27.39/users/${account}/created`)
       .then((res) => res.json())
       .then((res) => {
         setCreate([...res]);

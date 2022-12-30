@@ -26,7 +26,7 @@ const Details = ({ account, web3 }) => {
   }, [pathname]);
 
   useEffect(() => {
-    fetch(`http://3.38.208.33/nfts/${address}/${id}`)
+    fetch(`http://3.38.27.39/nfts/${address}/${id}`)
       .then((res) => res.json())
       .then((res) => {
         setDetailNFT(res);

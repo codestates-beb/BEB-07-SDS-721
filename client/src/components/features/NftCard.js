@@ -10,15 +10,15 @@ const NftCard = (props) => {
       ></img>
       <div className="card-info flex h-[160px] grow justify-center pt-[20px]">
         <div className="nft-info w-10/12">
-          <div className="mb-6 flex h-[60px] w-[100%] flex-col items-start overflow-hidden">
+          <div className="mb-6 flex h-[60px] w-[100%] flex-col items-start truncate">
             <p className="mb-1 text-[22px]">{props.nft_name}</p>
-            <div className="flex justify-start overflow-hidden">
+            <div className="flex justify-start">
               <img
                 src={props.artist_profile}
                 alt="none"
-                className="h-6 w-6 overflow-hidden rounded-full"
+                className="h-6 w-6 rounded-full"
               ></img>
-              <div className="ml-2 overflow-hidden font-mono font-normal">
+              <div className="ml-2 font-mono font-normal">
                 {props.artist_name}
               </div>
             </div>

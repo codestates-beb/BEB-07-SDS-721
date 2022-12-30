@@ -24,12 +24,13 @@ const Home = ({ isHome }) => {
     fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
+        const randomSort = res.sort(() => Math.random() - 0.5);
         if (isHome) {
-          setNfts([...res]);
+          setNfts([...randomSort]);
           // console.log(res);
         } else {
           setNfts([
-            ...res.filter((el) => {
+            ...randomSort.filter((el) => {
               if (el.attributes[0]) return el.attributes[0].value === category;
               else {
                 return false;

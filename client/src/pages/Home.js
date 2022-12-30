@@ -15,19 +15,18 @@ const Home = ({ isHome }) => {
   const navigate = useNavigate();
   const [nfts, setNfts] = useState([]);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [index, setIndex] = useState(8);
+  const [index, setIndex] = useState(12);
   const initialnfts = nfts.slice(0, index);
-  // const [home, setHome] = useState(isHome);
 
   useEffect(() => {
-    console.log('test!');
+    window.scrollTo(0, 0);
     //getData
     fetch('http://3.38.208.33/nfts')
       .then((res) => res.json())
       .then((res) => {
         if (isHome) {
           setNfts([...res]);
-          console.log(res);
+          // console.log(res);
         } else {
           setNfts([
             ...res.filter((el) => {
@@ -39,10 +38,11 @@ const Home = ({ isHome }) => {
           ]);
         }
       });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHome]);
 
   const loadMore = () => {
-    setIndex(index + 4);
+    setIndex(index + 8);
     // console.log(index);
     if (index >= nfts.length) {
       setIsCompleted(true);
@@ -66,7 +66,7 @@ const Home = ({ isHome }) => {
             return (
               <div
                 className="mx-auto"
-                key={nft.transactionHash}
+                key={nft._id}
                 onClick={() => {
                   cardClick(nft.tokenId, nft.contractAddress);
                 }}

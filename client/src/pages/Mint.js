@@ -1,5 +1,5 @@
 import './Mint.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import NftCard2 from 'components/features/NftCard_2';
 import Dropdown from 'components/features/CategoryDropDown';
@@ -19,6 +19,10 @@ const Mint = ({ account, web3 }) => {
   const projectSecret = '36d47b82182e7e1d41db4ee5f9e0ce8d';
   const auth =
     'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const ipfs = IpfsAPI({
     host: 'ipfs.infura.io',
@@ -162,7 +166,7 @@ const Mint = ({ account, web3 }) => {
       <div
         className={`fixed top-0 flex ${
           isLoading ? '' : 'hidden'
-        } h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
+        } z-50 h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
       >
         <img className="" src={spinner} alt="no img"></img>
       </div>

@@ -30,10 +30,10 @@ const Details = ({ account, web3 }) => {
       .then((res) => res.json())
       .then((res) => {
         setDetailNFT(res);
-        console.log(res);
+        // console.log(res);
         // console.log(account.toUpperCase);
         // console.log(res.owner.toUpperCase);
-        if (account.toUpperCase() === res.owner.toUpperCase()) {
+        if (!account || account.toUpperCase() === res.owner.toUpperCase()) {
           setOwner(false);
         }
       });
@@ -70,7 +70,7 @@ const Details = ({ account, web3 }) => {
       <div
         className={`fixed top-0 flex ${
           isLoading ? '' : 'hidden'
-        } h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
+        } z-50 h-[100vh] w-[100vw] items-center justify-center bg-black/10`}
       >
         <img className="" src={spinner} alt="no img"></img>
       </div>

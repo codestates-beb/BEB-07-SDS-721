@@ -25,10 +25,11 @@ SDS - 721 We combined the names of each team member and inspired by the ERC-721t
 - 백엔드
 - DB 스키마 작성
 
-**🐜 홍제석**
+**💪 홍제석**
 
 - Wireframe prototype 디자인
 - 프론트엔드 UI/UX 기능 구현
+- 프로젝트 문서화
 
 <br>
 
@@ -44,6 +45,12 @@ NFT의 매출은 2021년에 폭발적으로 성장했습니다. 2021년 매출�
 - OpenSea의 프론트엔드-백엔드 아키텍처이해
 - OpenSea의 API의 동작원리를 이해
 - Git을 통한 협업의 중요성에 대한 이해 및 커뮤니케이션 능력의 향상
+
+<br>
+
+# 🌏 App Link
+
+<li> <a href="http://react-to-s3.s3-website.ap-northeast-2.amazonaws.com/">AWS hosted URI</a></li>
 
 <br>
 
@@ -78,7 +85,7 @@ NFT의 매출은 2021년에 폭발적으로 성장했습니다. 2021년 매출�
 - gitbook
 - eslint / prettier
 
-#### Distribute
+#### Deployment
 
 - github action
 - client : AWS S3

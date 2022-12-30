@@ -9,7 +9,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
     if (!account) {
       e.preventDefault();
       await connectWallet();
-      navigate('/mypage');
+      if (account) navigate('/mypage');
     }
   };
 
@@ -17,7 +17,7 @@ const Header = ({ connectWallet, account, disconnectWallet }) => {
     if (!account) {
       e.preventDefault();
       await connectWallet();
-      navigate('/mint');
+      if (account) navigate('/mint');
     }
   };
 
